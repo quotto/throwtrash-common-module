@@ -136,9 +136,18 @@ describe("input check",()=>{
             ];
             assert(common.checkTrashes(data));
         });
-        it("invalid none schedules", ()=>{
+        it("invalid schedules empty", ()=>{
             const data = [
                 {type: "burn",schedules:[]},
+                {type: "other", trash_val:"電池",schedules:[{
+                    type: "weekday",value: "0"
+                }]}
+            ];
+            assert(!common.checkTrashes(data));
+        })
+        it("invalid none schedules", ()=>{
+            const data = [
+                {type: "burn"},
                 {type: "other", trash_val:"電池",schedules:[{
                     type: "weekday",value: "0"
                 }]}

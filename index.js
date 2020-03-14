@@ -44,7 +44,7 @@ const existSchedule = (schedules) => {
 
 const checkTrashes = (trashes) => {
     return trashes && (trashes.length > 0) && trashes.every((trash) => {
-        return trash.schedules.every((schedule) => {
+        return trash.schedules && trash.schedules.every((schedule) => {
             if (schedule.type === 'month') {
                 return isValidMonthValue(schedule.value);
             }
