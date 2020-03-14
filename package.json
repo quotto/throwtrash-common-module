@@ -1,0 +1,16 @@
+{
+  "name": "trash-common",
+  "version": "1.0.0",
+  "description": "Common Module of ThrowTrash Productions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "assert": "^2.0.0",
+    "eslint": "^6.8.0",
+    "mocha": "^7.1.0"
+  }
+}
