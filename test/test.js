@@ -183,11 +183,23 @@ describe("input check",()=>{
         });
     })
 });
-describe('generateId',()=> {
+describe('generateUUID',()=> {
     it('separatorナシ', ()=>{
-        assert.equal(common.generateId().length,32);
+        assert.equal(common.generateUUID().length,32);
     });
     it('separatorあり', ()=>{
-        assert.equal(common.generateId('-').length,36);
+        assert.equal(common.generateUUID('-').length,36);
     });
 });
+describe('generateRandomCode',()=>{
+    it('parameter無し',()=>{
+        const result = common.generateRandomCode();
+        console.log(result)
+        assert.equal(result.length,10);
+    });
+    it('parameterあり',()=>{
+        const result = common.generateRandomCode(8);
+        console.log(result)
+        assert.equal(result.length,8);
+    });
+})

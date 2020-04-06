@@ -66,7 +66,7 @@ const generateUUID = (separator='')=>{
     return uuid;
 };
 
-const generateRandomeCode = (length=10)=> {
+const generateRandomCode = (length=10)=> {
     let code = '';
     for(let i=0; i<length; i++) {
         code += 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'[Math.floor(Math.random()*61)];
@@ -85,5 +85,5 @@ module.exports = {
     isValidTrashVal: isValidTrashVal,
     checkTrashes: checkTrashes,
     generateUUID: generateUUID,
-    generateRandomeCode: generateRandomeCode
+    generateRandomCode: generateRandomCode
 };
