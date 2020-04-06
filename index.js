@@ -53,7 +53,7 @@ const checkTrashes = (trashes) => {
     });
 };
 
-const generateId = (separator='')=>{
+const generateUUID = (separator='')=>{
     let uuid = '', i, random;
     for (i = 0; i < 32; i++) {
         random = Math.random() * 16 | 0;
@@ -66,6 +66,14 @@ const generateId = (separator='')=>{
     return uuid;
 };
 
+const generateRandomeCode = (length=10)=> {
+    let code = '';
+    for(let i=0; i<length; i++) {
+        code += 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'[Math.floor(Math.random()*61)];
+    }
+    return code;
+}
+
 module.exports = {
     isNotEmpty: isNotEmpty,
     isNumber: isNumber,
@@ -76,5 +84,6 @@ module.exports = {
     isValidTrashType: isValidTrashType,
     isValidTrashVal: isValidTrashVal,
     checkTrashes: checkTrashes,
-    generateId: generateId
+    generateUUID: generateUUID,
+    generateRandomeCode: generateRandomeCode
 };
