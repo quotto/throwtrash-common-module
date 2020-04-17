@@ -69,7 +69,7 @@ const generateUUID = (separator='')=>{
 const generateRandomCode = (length=10)=> {
     let code = '';
     for(let i=0; i<length; i++) {
-        code += 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'[Math.floor(Math.random()*61)];
+        code += 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_'[Math.floor(Math.random()*63)];
     }
     return code;
 }
