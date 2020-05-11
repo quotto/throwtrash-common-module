@@ -1,3 +1,5 @@
+const logger = require("./logger");
+
 const isNotEmpty = (value) => {
     return (typeof(value) != "undefined") && String(value).length > 0;
 };
@@ -85,5 +87,6 @@ module.exports = {
     isValidTrashVal: isValidTrashVal,
     checkTrashes: checkTrashes,
     generateUUID: generateUUID,
-    generateRandomCode: generateRandomCode
+    generateRandomCode: generateRandomCode,
+    getLogger: ()=>{return logger}
 };
