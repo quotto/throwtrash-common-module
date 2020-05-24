@@ -1,35 +1,40 @@
-export const ERROR = '0'
-export const WARN = '1'
-export const INFO = '2'
-export const DEBUG = '3'
-// eslint-disable-next-line prefer-const
-export let LEVEL = INFO;
+const ERROR = '0';
+const WARN = '1';
+const INFO = '2';
+const DEBUG = '3';
 
-exports.error = (message: string)=>{
-    if(LEVEL >= ERROR) {
-        console.error(message);
-        return true;
+export class Logger {
+    private mLevel: string = INFO;
+    setLevel_ERROR():void { this.mLevel = ERROR }
+    setLevel_WARN():void { this.mLevel = WARN }
+    setLevel_INFO():void { this.mLevel = INFO }
+    setLevel_DEBUG():void { this.mLevel = DEBUG }
+    error(message: string): boolean {
+        if (this.mLevel >= ERROR) {
+            console.error(message);
+            return true;
+        }
+        return false;
     }
-    return false;
-}
-exports.warn = (message: string)=>{
-    if(LEVEL >= WARN) {
-        console.warn(message);
-        return true;
+    warn(message: string): boolean {
+        if (this.mLevel >= WARN) {
+            console.warn(message);
+            return true;
+        }
+        return false;
     }
-    return false;
-}
-exports.info = (message: string)=>{
-    if(LEVEL >= INFO) {
-        console.info(message);
-        return true;
+    info(message: string): boolean {
+        if (this.mLevel >= INFO) {
+            console.info(message);
+            return true;
+        }
+        return false;
     }
-    return false;
-}
-exports.debug = (message: string)=>{
-    if(LEVEL >= DEBUG) {
-        console.debug(message);
-        return true;
+    debug(message: string): boolean {
+        if (this.mLevel >= DEBUG) {
+            console.debug(message);
+            return true;
+        }
+        return false;
     }
-    return false;
 }

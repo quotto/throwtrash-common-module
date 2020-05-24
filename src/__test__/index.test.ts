@@ -1,4 +1,4 @@
-const common = require("../index.js");
+import * as common from "../index";
 
 describe("input check",()=>{
     describe("isNotEmpty",()=>{
@@ -23,9 +23,6 @@ describe("input check",()=>{
         it("string",()=>{
             expect(common.isNumber("string")).toBeFalsy();
         });
-        it("undefined",()=>{
-            expect(common.isNumber(undefined)).toBeFalsy();
-        });
     });
     describe("isNotLessMin",()=>{
         it("not less",()=>{
@@ -34,9 +31,6 @@ describe("input check",()=>{
         it("less",()=>{
             expect(!common.isNotLessMin(0,1)).toBeTruthy();
         });
-        it("undefined",()=>{
-            expect(common.isNotLessMin(undefined,1)).toBeFalsy();
-        });
     });
     describe("isNotOverMax",()=>{
         it("not over",()=>{
@@ -44,9 +38,6 @@ describe("input check",()=>{
         });
         it("over",()=>{
             expect(common.isNotOverMax(2,1)).toBeFalsy();
-        });
-        it("undefined",()=>{
-            expect(common.isNotOverMax(undefined,1)).toBeFalsy();
         });
     });
     describe("isValidMonthValue",()=>{
@@ -65,25 +56,22 @@ describe("input check",()=>{
         it("not number",()=>{
             expect(common.isValidMonthValue("gy7")).toBeFalsy();
         });
-        it("undefined",()=>{
-            expect(common.isValidMonthValue(undefined)).toBeFalsy();
-        });
     });
     describe("isValidTrashType",()=>{
         it("valid other",()=>{
-            expect(common.isValidTrashType({type: "other",trash_val: "生ゴミ"},10)).toBeTruthy();
+            expect(common.isValidTrashType({type: "other",trash_val: "生ゴミ", schedules: []},10)).toBeTruthy();
         });
         it("valid preset",()=>{
-            expect(common.isValidTrashType({type: "burn", trash_val: ""},10)).toBeTruthy();
+            expect(common.isValidTrashType({type: "burn", trash_val: "", schedules: []},10)).toBeTruthy();
         });
         it("invalid over",()=>{
-            expect(common.isValidTrashType({type: "other",trash_val: "あいうえおかきくけこさ"},10)).toBeFalsy();
+            expect(common.isValidTrashType({type: "other",trash_val: "あいうえおかきくけこさ", schedules: []},10)).toBeFalsy();
         });
         it("invalid less",()=>{
-            expect(common.isValidTrashType({type: "other",trash_val: ""},10)).toBeFalsy();
+            expect(common.isValidTrashType({type: "other",trash_val: "", schedules: []},10)).toBeFalsy();
         });
         it("invalid undefined",()=>{
-            expect(common.isValidTrashType({type: "other",trash_val: undefined},10)).toBeFalsy();
+            expect(common.isValidTrashType({type: "other",trash_val: undefined, schedules:[]},10)).toBeFalsy();
         });
     });
     describe("isValidTrashVal",()=>{
@@ -105,22 +93,16 @@ describe("input check",()=>{
         it("valid blank",()=>{
                 expect(common.isValidTrashVal("bla nk")).toBeTruthy();
         });
-        it("invalid undefined",()=>{
-            expect(common.isValidTrashVal(undefined)).toBeFalsy();
-        });
     });
     describe("existSchedule",()=>{
         it("exist",()=>{
-            expect(common.existSchedule([{type: "weekday"}])).toBeTruthy();
+            expect(common.existSchedule([{type: "weekday", value: "0"}])).toBeTruthy();
         });
         it("none",()=>{
-            expect(common.existSchedule([{type: "none"},{type:"weekday"}])).toBeFalsy();
+            expect(common.existSchedule([{type: "none", value: ""},{type:"weekday",value: "0"}])).toBeFalsy();
         });
         it("empty",()=>{
             expect(common.existSchedule([])).toBeFalsy();
-        });
-        it("undefined",()=>{
-            expect(common.existSchedule(undefined)).toBeFalsy();
         });
     });
     describe("checkTrashes",()=>{
@@ -146,7 +128,7 @@ describe("input check",()=>{
         })
         it("invalid none schedules", ()=>{
             const data = [
-                {type: "burn"},
+                {type: "burn", schedules: []},
                 {type: "other", trash_val:"電池",schedules:[{
                     type: "weekday",value: "0"
                 }]}
@@ -176,9 +158,6 @@ describe("input check",()=>{
                 }]}
             ];
             expect(common.checkTrashes(data)).toBeFalsy();
-        });
-        it("undefined", ()=>{
-            expect(common.checkTrashes(undefined)).toBeFalsy();
         });
     })
 });
