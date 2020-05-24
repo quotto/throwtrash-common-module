@@ -1,8 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Logger = void 0;
 const ERROR = '0';
 const WARN = '1';
 const INFO = '2';
 const DEBUG = '3';
-export class Logger {
+class Logger {
     constructor() {
         this.mLevel = INFO;
     }
@@ -39,3 +42,4 @@ export class Logger {
         return false;
     }
 }
+exports.Logger = Logger;
