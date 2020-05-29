@@ -1,5 +1,7 @@
 import * as  common from "../index" ;
+import {loggerTest} from "./logger.sub";
 const logger: common.Logger = common.getLogger();
+
 
 describe('logger test',()=>{
     it('error level',()=>{
@@ -27,4 +29,8 @@ describe('logger test',()=>{
         expect(logger.info('info')).toBeTruthy();
         expect(logger.debug('debug')).toBeTruthy();
     });
+    it("logger on another module", ()=>{
+        logger.setLevel_DEBUG();
+        expect(loggerTest());
+    })
 })

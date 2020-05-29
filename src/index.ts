@@ -1,4 +1,5 @@
 import {Logger} from "./logger";
+const singleLogger = new Logger();
 
 export * from "./logger";
 export function isNotEmpty(value: string | number | undefined | null): boolean {
@@ -74,7 +75,7 @@ export function generateRandomCode(length = 10): string {
 }
 
 export function getLogger(): Logger {
-    return new Logger();
+    return singleLogger;
 }
 
 export interface EvweekValue {
