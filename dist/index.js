@@ -12,6 +12,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getLogger = exports.generateRandomCode = exports.generateUUID = exports.checkTrashes = exports.existSchedule = exports.isValidTrashType = exports.isValidMonthValue = exports.isValidTrashVal = exports.isNotOverLength = exports.isNotOverMax = exports.isNotLessMin = exports.isNumber = exports.isNotEmpty = void 0;
 const logger_1 = require("./logger");
+const singleLogger = new logger_1.Logger();
 __exportStar(require("./logger"), exports);
 function isNotEmpty(value) {
     return (typeof (value) != "undefined") && value != null && String(value).length > 0;
@@ -85,6 +86,6 @@ function generateRandomCode(length = 10) {
 }
 exports.generateRandomCode = generateRandomCode;
 function getLogger() {
-    return new logger_1.Logger();
+    return singleLogger;
 }
 exports.getLogger = getLogger;
