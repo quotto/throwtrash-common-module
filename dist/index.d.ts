@@ -30,3 +30,4 @@ export interface TrashData {
     trash_val?: string;
     schedules: Array<TrashSchedule>;
 }
+export * as client from "./client";

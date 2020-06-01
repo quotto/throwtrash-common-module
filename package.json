@@ -1,6 +1,6 @@
 {
   "name": "trash-common",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "Common Module of ThrowTrash Productions",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -21,5 +21,11 @@
     "ts-jest": "^26.0.0",
     "typescript": "^3.9.3"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@types/moment-timezone": "^0.5.13",
+    "@types/request-promise": "^4.1.46",
+    "moment-timezone": "^0.5.31",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.5"
+  }
 }

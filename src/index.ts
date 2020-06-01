@@ -33,7 +33,7 @@ export function isValidMonthValue(month_val: string | number): boolean {
 }
 
 export function isValidTrashType(trash: TrashData, maxlength: number): boolean {
-    return trash.type != "other" || (isNotEmpty(trash.trash_val) && isValidTrashVal(trash.trash_val!!) && isNotOverLength(trash.trash_val!!, maxlength))
+    return trash.type != "other" || (isNotEmpty(trash.trash_val) && isValidTrashVal(trash.trash_val as string) && isNotOverLength(trash.trash_val as string, maxlength))
 }
 
 export function existSchedule(schedules: TrashSchedule[]): boolean {
@@ -98,3 +98,5 @@ export interface TrashData {
     trash_val?: string,
     schedules: Array<TrashSchedule>
 }
+
+export * as client from "./client"
