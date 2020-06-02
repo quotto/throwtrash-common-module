@@ -1,2 +1,0 @@
-FROM node:12.1
-WORKDIR /app
