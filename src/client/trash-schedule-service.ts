@@ -6,6 +6,12 @@ import {TextCreator} from "./text-creator";
 import {TrashSchedule,TrashData,TrashTypeValue,EvweekValue,getLogger} from "../index"
 const logger = getLogger();
 
+export interface GetTrashDataResult {
+    status: string,
+    response?: TrashData[],
+    msgId?: string
+}
+
 export class TrashScheduleService {
     private dbAdapter: DBAdapter;
     private timezone: string;
@@ -20,7 +26,7 @@ export class TrashScheduleService {
     access_token: アクセストークン
     target_day: 0:今日,1:明日
     **/
-    async getTrashData(access_token: string) {
+    async getTrashData(access_token: string):Promise<GetTrashDataResult> {
         try {
             let user_id:string = access_token;
             // 非互換用のチェック条件,access_tokenが36桁の場合はuser_idとみなして直接TrashScheduleを検索する
