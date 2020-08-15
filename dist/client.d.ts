@@ -1,5 +1,5 @@
 import { TrashSchedule } from "./index";
-import { TrashScheduleService } from "./client/trash-schedule-service";
+import { TrashScheduleService, GetTrashDataResult } from "./client/trash-schedule-service";
 import { DBAdapter } from "./client/db-adapter";
 import { TextCreator } from "./client/text-creator";
 interface TrashDataText {
@@ -13,4 +13,4 @@ interface RecentTrashDate {
     list: Date[];
     recent: Date;
 }
-export { TrashScheduleService, TrashDataText, RecentTrashDate, DBAdapter, TextCreator };
+export { TrashScheduleService, TrashDataText, RecentTrashDate, DBAdapter, TextCreator, GetTrashDataResult };
