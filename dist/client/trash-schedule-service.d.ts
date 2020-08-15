@@ -2,6 +2,11 @@ import { RecentTrashDate } from "../client";
 import { DBAdapter } from "./db-adapter";
 import { TextCreator } from "./text-creator";
 import { TrashData, TrashTypeValue, EvweekValue } from "../index";
+export interface GetTrashDataResult {
+    status: string;
+    response?: TrashData[];
+    msgId?: string;
+}
 export declare class TrashScheduleService {
     private dbAdapter;
     private timezone;
@@ -11,15 +16,7 @@ export declare class TrashScheduleService {
     access_token: アクセストークン
     target_day: 0:今日,1:明日
     **/
-    getTrashData(access_token: string): Promise<{
-        status: string;
-        response: TrashData[];
-        msgId?: undefined;
-    } | {
-        status: string;
-        msgId: string;
-        response?: undefined;
-    }>;
+    getTrashData(access_token: string): Promise<GetTrashDataResult>;
     /**
     target_day: 対象とする日を特定するための値。0なら今日、1なら明日……となる。
     **/
