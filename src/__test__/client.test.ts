@@ -1,4 +1,4 @@
-import {getLogger,TrashData,TrashTypeValue} from "../index";
+import {getLogger,TrashData,TrashTypeValue, MESSAGES} from "../index";
 const logger = getLogger();
 logger.setLevel_DEBUG();
 
@@ -7,6 +7,7 @@ import rp = require('request-promise');
 import {TextCreator,RecentTrashDate,DBAdapter,TrashScheduleService} from "../client";
 
 import testData = require("./testdata.json");
+
 
 class TestDBAdapter implements DBAdapter {
     getUserIDByAccessToken(access_token: string): Promise<string> {
@@ -537,21 +538,21 @@ describe('getTrashData', function () {
     it('存在しないアクセストークン', async()=> {
         const result = await service.getTrashData(access_token_002);
         expect(result.status).toBe("error");
-        expect(result.msgId).toBe("id_not_found_error");
+        expect(result.msgId).toBe(MESSAGES.ERROR_ID_NOT_FOUND);
     });
     it('存在しないID', async()=> {
         const result = await service.getTrashData(access_token_004);
         expect(result.status).toBe("error");
-        expect(result.msgId).toBe("id_not_found_error");
+        expect(result.msgId).toBe(MESSAGES.ERROR_ID_NOT_FOUND);
     });
     it('アクセストークン取得でDB異常', async()=> {
         const result = await service.getTrashData("failed_token");
         expect(result.status).toBe("error");
-        expect(result.msgId).toBe("general_error");
+        expect(result.msgId).toBe(MESSAGES.ERROR_GENERAL);
     });
     it('スケジュール取得でDB異常', async()=> {
         const result = await service.getTrashData(access_token_005);
         expect(result.status).toBe("error");
-        expect(result.msgId).toBe("general_error");
+        expect(result.msgId).toBe(MESSAGES.ERROR_GENERAL);
     });
 });

@@ -1,4 +1,5 @@
 import { Logger } from "./logger";
+import MESSAGES from "./messages";
 export * from "./logger";
 export declare function isNotEmpty(value: string | number | undefined | null): boolean;
 export declare function isNumber(value: string | number): boolean;
@@ -31,3 +32,4 @@ export interface TrashData {
     schedules: Array<TrashSchedule>;
 }
 export * as client from "./client";
+export { MESSAGES };

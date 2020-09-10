@@ -29,7 +29,7 @@ class TextCreator {
         trash_items.forEach((item) => {
             trash_name_list.push(item.type === 'other' ? item.name : this.commonText.trashname[item.type]);
         });
-        const response_trashes = trash_name_list.join(this.localeText.separate);
+        const response_trashes = trash_name_list.join(this.localeText.SEPARATOR);
         return response_trashes;
     }
     /**
@@ -39,118 +39,55 @@ class TextCreator {
      */
     getLaunchResponse(trash_items) {
         if (trash_items.length === 0) {
-            return this.localeText.result.launchnothing;
+            return this.localeText.ANSWER_NOTHING;
         }
         else {
             const body = this.createTrashMessageBody(trash_items);
-            return this.localeText.result.launch.replace('%s', body);
+            return this.localeText.ANSWER_LAUNCH.replace('%s', body);
         }
     }
     getPointdayResponse(target_day, trash_items) {
         if (trash_items.length === 0) {
-            return this.localeText.result.pointnothing.replace('%s', this.commonText.pointday[target_day]);
+            return this.localeText.ANSWER_NOTHING_A_DAY.replace('%s', this.commonText.pointday[target_day]);
         }
         else {
             const body = this.createTrashMessageBody(trash_items);
-            return this.localeText.result.pointday.replace('%s1', this.commonText.pointday[target_day]).replace('%s2', body);
+            return this.localeText.ANSWER_A_DAY.replace('%s1', this.commonText.pointday[target_day]).replace('%s2', body);
         }
     }
     getDayByTrashTypeMessage(slot_value, target_trash) {
         if (target_trash.length === 0) {
-            return this.localeText.result.fromtrashnothing.replace('%s', slot_value.name);
+            return this.localeText.ANSWER_NOTHING_TRASH.replace('%s', slot_value.name);
         }
         if (slot_value.type === 'other') {
             const part_text = [];
             target_trash.forEach((trash) => {
-                part_text.push(this.localeText.result.fromtrashtypepart.replace('%s1', trash.key)
-                    .replace('%s2', this.localeText.result.fromtrashdate
+                part_text.push(this.localeText.ANSWER_A_TRASH.replace('%s1', trash.key)
+                    .replace('%s2', this.localeText.ANSWER_TRASH_DATE
                     .replace("%m", this.commonText.month ? this.commonText.month[trash.recent.getMonth()] : trash.recent.getMonth() + 1)
                     .replace('%d', trash.recent.getDate())
                     .replace('%w', this.commonText.weekday[trash.recent.getDay()])));
             });
-            const body = part_text.join(this.localeText.separate);
-            return this.localeText.result.fromtrashtype.replace('%s', body);
+            const body = part_text.join(this.localeText.SEPARATOR);
+            return this.localeText.ANSWER_BY_TRASH.replace('%s', body);
         }
         else {
-            return this.localeText.result.fromtrashtype.replace('%s', this.localeText.result.fromtrashtypepart
+            return this.localeText.ANSWER_BY_TRASH.replace('%s', this.localeText.ANSWER_A_TRASH
                 .replace('%s1', slot_value.name)
-                .replace('%s2', this.localeText.result.fromtrashdate
+                .replace('%s2', this.localeText.ANSWER_TRASH_DATE
                 .replace("%m", this.commonText.month ? this.commonText.month[target_trash[0].recent.getMonth()] : target_trash[0].recent.getMonth() + 1)
                 .replace('%d', target_trash[0].recent.getDate())
                 .replace('%w', this.commonText.weekday[target_trash[0].recent.getDay()])));
         }
     }
-    get all_schedule() {
-        return this.localeText.notice.registerdresponse;
-    }
-    get launch_reprompt() {
-        return this.localeText.notice.continue;
-    }
-    get require_account_link() {
-        return this.localeText.help.account;
-    }
-    get ask_point_day() {
-        return this.localeText.notice.pointdayquestion;
-    }
-    get ask_trash_type() {
-        return this.localeText.notice.fromtrashquestion;
-    }
-    get help() {
-        return this.localeText.help.help;
-    }
-    get goodbye() {
-        return this.localeText.help.bye;
-    }
-    get next_previous() {
-        return this.localeText.help.nextprevious;
-    }
-    get require_reminder_permission() {
-        return this.localeText.reminder.permission;
-    }
-    get ask_reminder_week() {
-        return this.localeText.reminder.week;
-    }
-    get ask_reminder_time() {
-        return this.localeText.reminder.time;
-    }
-    get finish_set_remind() {
-        return this.localeText.reminder.finish;
-    }
-    get general_error() {
-        return this.localeText.error.general;
-    }
-    get id_not_found_error() {
-        return this.localeText.error.idnotfound;
-    }
-    get thanks() {
-        return this.localeText.purchase.thanks;
-    }
-    get already() {
-        return this.localeText.purchase.already;
-    }
-    get reprompt() {
-        return this.localeText.purchase.reprompt;
-    }
-    get cancel() {
-        return this.localeText.purchase.cancel;
-    }
-    get ok() {
-        return this.localeText.purchase.ok;
-    }
-    get upsell() {
-        return this.localeText.purchase.upsell;
-    }
-    get reminder_cancel() {
-        return this.localeText.reminder.cancel;
-    }
-    get unknown_error() {
-        return this.localeText.error.unknown;
+    getMessage(message_id) {
+        return this.localeText[message_id];
     }
     getReminderConfirm(week_type, time) {
-        return this.localeText.reminder.confirm.replace('%s1', week_type).replace('%s2', time);
+        return this.localeText.REMINDER_CONFIRM.replace('%s1', week_type).replace('%s2', time);
     }
     getReminderComplete(week_type, time) {
-        return this.localeText.reminder.complete.replace('%s1', week_type).replace('%s2', time);
+        return this.localeText.REMINDER_DEFINE.replace('%s1', week_type).replace('%s2', time);
     }
     getTrashName(trash_type) {
         return this.commonText.trashname[trash_type];
@@ -196,12 +133,12 @@ class TextCreator {
         return return_data;
     }
     get registerd_card_title() {
-        return this.localeText.card.registerd_title;
+        return this.localeText.CARD_TITLE;
     }
     getRegisterdContentForCard(schedule_data) {
         let card_text = '';
         schedule_data.forEach((data) => {
-            card_text += `${data.typeText}: ${data.schedules.join(this.localeText.separate)}\n`;
+            card_text += `${data.typeText}: ${data.schedules.join(this.localeText.SEPARATOR)}\n`;
         });
         return card_text;
     }

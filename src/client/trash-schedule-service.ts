@@ -4,6 +4,7 @@ import {RecentTrashDate} from "../client";
 import {DBAdapter} from "./db-adapter";
 import {TextCreator} from "./text-creator";
 import {TrashSchedule,TrashData,TrashTypeValue,EvweekValue,getLogger} from "../index"
+import MESSAGES from "../messages";
 const logger = getLogger();
 
 export interface GetTrashDataResult {
@@ -46,13 +47,13 @@ export class TrashScheduleService {
             logger.error(`User Not Found(AccessToken: ${access_token})`);
             return {
                 status: 'error',
-                msgId: 'id_not_found_error'
+                msgId: MESSAGES.ERROR_ID_NOT_FOUND
             };
         } catch(err) {
             logger.error(err);
             return {
                     status:'error',
-                    msgId: 'general_error'
+                    msgId: MESSAGES.ERROR_GENERAL
             };
         }
     }
