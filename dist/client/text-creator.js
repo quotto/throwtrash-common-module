@@ -21,7 +21,7 @@ class TextCreator {
      */
     constructor(locale) {
         this.locale = locale;
-        this.localeText = require(`./template_text/${this.locale}.text.json`);
+        this.localeText = require(`./template_text/${this.locale}.text.ts`).default;
         this.commonText = require(`./template_text/${this.locale}.common.json`);
     }
     createTrashMessageBody(trash_items) {
@@ -63,9 +63,9 @@ class TextCreator {
             const part_text = [];
             target_trash.forEach((trash) => {
                 part_text.push(this.localeText.ANSWER_A_TRASH.replace('%s1', trash.key)
-                    .replace('%s2', this.localeText.ANSWER_TRASH_DATE
+                    .replace('%s2', this.localeText.ANSWER_DATE
                     .replace("%m", this.commonText.month ? this.commonText.month[trash.recent.getMonth()] : trash.recent.getMonth() + 1)
-                    .replace('%d', trash.recent.getDate())
+                    .replace('%d', trash.recent.getDate().toString())
                     .replace('%w', this.commonText.weekday[trash.recent.getDay()])));
             });
             const body = part_text.join(this.localeText.SEPARATOR);
@@ -74,9 +74,9 @@ class TextCreator {
         else {
             return this.localeText.ANSWER_BY_TRASH.replace('%s', this.localeText.ANSWER_A_TRASH
                 .replace('%s1', slot_value.name)
-                .replace('%s2', this.localeText.ANSWER_TRASH_DATE
+                .replace('%s2', this.localeText.ANSWER_DATE
                 .replace("%m", this.commonText.month ? this.commonText.month[target_trash[0].recent.getMonth()] : target_trash[0].recent.getMonth() + 1)
-                .replace('%d', target_trash[0].recent.getDate())
+                .replace('%d', target_trash[0].recent.getDate().toString())
                 .replace('%w', this.commonText.weekday[target_trash[0].recent.getDay()])));
         }
     }

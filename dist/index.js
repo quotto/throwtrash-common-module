@@ -21,15 +21,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MESSAGES = exports.getLogger = exports.generateRandomCode = exports.generateUUID = exports.checkTrashes = exports.existSchedule = exports.isValidTrashType = exports.isValidMonthValue = exports.isValidTrashVal = exports.isNotOverLength = exports.isNotOverMax = exports.isNotLessMin = exports.isNumber = exports.isNotEmpty = void 0;
+exports.getLogger = exports.generateRandomCode = exports.generateUUID = exports.checkTrashes = exports.existSchedule = exports.isValidTrashType = exports.isValidMonthValue = exports.isValidTrashVal = exports.isNotOverLength = exports.isNotOverMax = exports.isNotLessMin = exports.isNumber = exports.isNotEmpty = void 0;
 const logger_1 = require("./logger");
 const singleLogger = new logger_1.Logger();
-const messages_1 = __importDefault(require("./messages"));
-exports.MESSAGES = messages_1.default;
 __exportStar(require("./logger"), exports);
 function isNotEmpty(value) {
     return (typeof (value) != "undefined") && value != null && String(value).length > 0;

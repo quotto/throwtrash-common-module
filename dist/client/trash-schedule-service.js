@@ -1,13 +1,9 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TrashScheduleService = void 0;
 const moment = require("moment-timezone");
 const rp = require("request-promise");
 const index_1 = require("../index");
-const messages_1 = __importDefault(require("../messages"));
 const logger = index_1.getLogger();
 class TrashScheduleService {
     constructor(_timezone, _text_creator, _dbAdapter) {
@@ -38,14 +34,14 @@ class TrashScheduleService {
             logger.error(`User Not Found(AccessToken: ${access_token})`);
             return {
                 status: 'error',
-                msgId: messages_1.default.ERROR_ID_NOT_FOUND
+                msgId: "ERROR_ID_NOT_FOUND"
             };
         }
         catch (err) {
             logger.error(err);
             return {
                 status: 'error',
-                msgId: messages_1.default.ERROR_GENERAL
+                msgId: "ERROR_GENERAL"
             };
         }
     }

@@ -1,5 +1,6 @@
 import { TrashTypeValue, TrashData } from "../index";
 import { TrashDataText } from "../client";
+import { LocaleText } from "./template_text/locale-text";
 export declare class TextCreator {
     private locale;
     private localeText;
@@ -21,7 +22,7 @@ export declare class TextCreator {
         key: string;
         recent: Date;
     }[]): string;
-    getMessage(message_id: string): string;
+    getMessage(message_id: keyof LocaleText): string;
     getReminderConfirm(week_type: string, time: string): string;
     getReminderComplete(week_type: string, time: string): string;
     getTrashName(trash_type: string): string;

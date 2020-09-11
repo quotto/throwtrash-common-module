@@ -1,8 +1,6 @@
 import {Logger} from "./logger";
 const singleLogger = new Logger();
 
-import MESSAGES from "./messages";
-
 export * from "./logger";
 export function isNotEmpty(value: string | number | undefined | null): boolean {
     return (typeof (value) != "undefined") && value != null && String(value).length > 0;
@@ -102,5 +100,3 @@ export interface TrashData {
 }
 
 export * as client from "./client"
-
-export {MESSAGES}

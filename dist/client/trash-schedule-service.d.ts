@@ -2,10 +2,11 @@ import { RecentTrashDate } from "../client";
 import { DBAdapter } from "./db-adapter";
 import { TextCreator } from "./text-creator";
 import { TrashData, TrashTypeValue, EvweekValue } from "../index";
+import { LocaleText } from "./template_text/locale-text";
 export interface GetTrashDataResult {
     status: string;
     response?: TrashData[];
-    msgId?: string;
+    msgId?: keyof LocaleText;
 }
 export declare class TrashScheduleService {
     private dbAdapter;

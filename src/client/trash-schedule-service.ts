@@ -4,13 +4,13 @@ import {RecentTrashDate} from "../client";
 import {DBAdapter} from "./db-adapter";
 import {TextCreator} from "./text-creator";
 import {TrashSchedule,TrashData,TrashTypeValue,EvweekValue,getLogger} from "../index"
-import MESSAGES from "../messages";
+import {LocaleText} from "./template_text/locale-text"
 const logger = getLogger();
 
 export interface GetTrashDataResult {
     status: string,
     response?: TrashData[],
-    msgId?: string
+    msgId?: keyof LocaleText
 }
 
 export class TrashScheduleService {
@@ -47,13 +47,13 @@ export class TrashScheduleService {
             logger.error(`User Not Found(AccessToken: ${access_token})`);
             return {
                 status: 'error',
-                msgId: MESSAGES.ERROR_ID_NOT_FOUND
+                msgId: "ERROR_ID_NOT_FOUND"
             };
         } catch(err) {
             logger.error(err);
             return {
                     status:'error',
-                    msgId: MESSAGES.ERROR_GENERAL
+                    msgId: "ERROR_GENERAL"
             };
         }
     }
