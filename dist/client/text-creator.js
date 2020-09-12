@@ -21,7 +21,7 @@ class TextCreator {
      */
     constructor(locale) {
         this.locale = locale;
-        this.localeText = require(`./template_text/${this.locale}.text.ts`).default;
+        this.localeText = require(`./template_text/${this.locale}.text`).default;
         this.commonText = require(`./template_text/${this.locale}.common.json`);
     }
     createTrashMessageBody(trash_items) {

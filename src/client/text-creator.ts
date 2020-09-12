@@ -27,7 +27,7 @@ export class TextCreator {
      */
     constructor(locale: string) {
         this.locale = locale;
-        this.localeText = require(`./template_text/${this.locale}.text.ts`).default as LocaleText
+        this.localeText = require(`./template_text/${this.locale}.text`).default as LocaleText
         this.commonText = require(`./template_text/${this.locale}.common.json`);
     }
 
