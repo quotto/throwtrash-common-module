@@ -243,7 +243,7 @@ class TrashScheduleService {
             const past_date = (current_dt.getTime() - start_dt.getTime()) / 1000 / 60 / 60 / 24;
             // 差が0以外かつあまりが0でなければ1週間進める
             if (past_date != 0 && (past_date / 7) % evweek_val.interval != 0) {
-                next_dt.setDate(next_dt.getDate() + (7 * (evweek_val.interval - (past_date / 7))));
+                next_dt.setDate(next_dt.getDate() + (7 * (evweek_val.interval - (Math.abs(past_date / 7)))));
             }
         }
         return next_dt;
