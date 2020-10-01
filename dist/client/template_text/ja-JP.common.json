@@ -24,7 +24,7 @@
         "weekday": "毎週%s",
         "biweek": "第%s1%s2",
         "month":"毎月%s日",
-        "evweek":"隔週%s"
+        "evweek":"%s2週に1度の%s1"
     },
     "trashname": {
         "burn" : "もえるゴミ",
