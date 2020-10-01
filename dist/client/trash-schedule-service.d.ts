@@ -34,7 +34,7 @@ export declare class TrashScheduleService {
     **/
     checkEnableTrashes(trashes: Array<TrashData>, target_day: number): Promise<Array<TrashTypeValue>>;
     /**
-     * スケジュールの種類と値に従い今日から最も近い 日にちを返す。
+     * スケジュールの種類と値に従い今日から最も近い日にちを返す。
      * @param {Date} today タイムゾーンを考慮した今日の日付
      * @param {String} schedule_type スケジュールの種類
      * @param {String} schedule_val スケジュールの値

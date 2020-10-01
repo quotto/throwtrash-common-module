@@ -84,9 +84,11 @@ class TrashScheduleService {
         };
         const check = (schedule) => {
             if (schedule.type === 'weekday') {
+                // 毎週
                 return Number(schedule.value) === dt.getDay();
             }
             else if (schedule.type === 'biweek') {
+                // 第x○曜日
                 const matches = schedule.value.match(/(\d)-(\d)/);
                 if (matches) {
                     const weekday = Number(matches[1]);
@@ -102,9 +104,11 @@ class TrashScheduleService {
                 }
             }
             else if (schedule.type === 'month') {
+                // 毎月何日 
                 return dt.getDate() === Number(schedule.value);
             }
             else if (schedule.type === 'evweek') {
+                // 隔週
                 const schedule_value = schedule.value;
                 if (Number(schedule_value.weekday) === dt.getDay()) {
                     const start_dt = new Date(schedule_value.start);
@@ -123,7 +127,7 @@ class TrashScheduleService {
                     const past_date = (current_dt.getTime() - start_dt.getTime()) / 1000 / 60 / 60 / 24;
                     // 差が0またはあまりが0であれば隔週に該当
                     // trash_data.schedule = [];
-                    return past_date === 0 || (past_date / 7) % 2 === 0;
+                    return past_date === 0 || (past_date / 7) % schedule_value.interval === 0;
                 }
             }
             return false;
@@ -160,7 +164,7 @@ class TrashScheduleService {
         });
     }
     /**
-     * スケジュールの種類と値に従い今日から最も近い 日にちを返す。
+     * スケジュールの種類と値に従い今日から最も近い日にちを返す。
      * @param {Date} today タイムゾーンを考慮した今日の日付
      * @param {String} schedule_type スケジュールの種類
      * @param {String} schedule_val スケジュールの値
@@ -238,8 +242,8 @@ class TrashScheduleService {
             // 登録されている日付からの経過日数を求める
             const past_date = (current_dt.getTime() - start_dt.getTime()) / 1000 / 60 / 60 / 24;
             // 差が0以外かつあまりが0でなければ1週間進める
-            if (past_date != 0 && (past_date / 7) % 2 != 0) {
-                next_dt.setDate(next_dt.getDate() + 7);
+            if (past_date != 0 && (past_date / 7) % evweek_val.interval != 0) {
+                next_dt.setDate(next_dt.getDate() + (7 * (evweek_val.interval - (Math.abs(past_date / 7)))));
             }
         }
         return next_dt;
