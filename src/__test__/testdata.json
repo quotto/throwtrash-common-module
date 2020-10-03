@@ -276,6 +276,20 @@
             ]
         }
     ],
+    "evweekNoneInterval": [
+        {
+            "type": "burn",
+            "schedules": [
+                {
+                    "type": "evweek",
+                    "value": {
+                        "weekday": "3",
+                        "start": "2020-09-13"
+                    }
+                }
+            ]
+        }
+    ],
     "evweekInterval3": [
         {
             "type": "burn",

@@ -1,6 +1,6 @@
 {
   "name": "trash-common",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Common Module of ThrowTrash Productions",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

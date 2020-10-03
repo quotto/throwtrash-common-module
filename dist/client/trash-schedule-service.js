@@ -110,6 +110,8 @@ class TrashScheduleService {
             else if (schedule.type === 'evweek') {
                 // 隔週
                 const schedule_value = schedule.value;
+                // インターバルの設定がない場合はデフォルト2（週）で算出する
+                schedule_value.interval = schedule_value.interval || 2;
                 if (Number(schedule_value.weekday) === dt.getDay()) {
                     const start_dt = new Date(schedule_value.start);
                     start_dt.setHours(0);
@@ -224,6 +226,8 @@ class TrashScheduleService {
         }
         else if (schedule_type === 'evweek') {
             const evweek_val = schedule_val;
+            // インターバルが設定されていないデータが存在するためその場合は2に置き換える
+            evweek_val.interval = evweek_val.interval || 2;
             const start_dt = new Date(evweek_val.start);
             start_dt.setHours(0);
             start_dt.setMinutes(0);
