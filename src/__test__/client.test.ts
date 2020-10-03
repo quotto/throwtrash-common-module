@@ -202,6 +202,18 @@ describe('ja-JP',function(){
             expect(result[1].name).toBe("もえないゴミ");
             expect(result[2].name).toBe("プラスチック");
             expect(result[3].name).toBe("ビン");
+        });
+        it('noneInterval',async()=>{
+
+            Date.now = jest.fn().mockReturnValue(Date.UTC(2020,8,29,15,0,0,0));
+
+            /**
+             * インターバルを持たない隔週データ（機能追加前）
+             */
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            const result = await service.checkEnableTrashes(testData.evweekNoneInterval, 0) as TrashTypeValue[];
+            expect(result.length).toBe(1);
+            expect(result[0].name).toBe("もえるゴミ");
         })
         it('none',async()=>{
             Date.now = jest.fn().mockReturnValue(Date.UTC(2018,2,3,15,0,0,0));
@@ -318,6 +330,21 @@ describe('ja-JP',function(){
             expect(next_dt.getMonth()).toBe(11);
             expect(next_dt.getDate()).toBe(2);
         });
+        it('evweek:インターバルなし',()=>{
+            const next_dt = service.calculateNextDateBySchedule(new Date('2019/11/21'), 'evweek', {start: '2019-11-17',weekday: '1'});
+            expect(next_dt.getMonth()).toBe(11);
+            expect(next_dt.getDate()).toBe(2);
+        });
+        it('evweek:インターバル3',()=>{
+            const next_dt = service.calculateNextDateBySchedule(new Date('2020/09/30'), 'evweek', {start: '2020-09-06',weekday: '4',interval:3});
+            expect(next_dt.getMonth()).toBe(9);
+            expect(next_dt.getDate()).toBe(1);
+        });
+        it('evweek:インターバル4',()=>{
+            const next_dt = service.calculateNextDateBySchedule(new Date('2020/09/30'), 'evweek', {start: '2020-08-30',weekday: '4',interval:4});
+            expect(next_dt.getMonth()).toBe(9);
+            expect(next_dt.getDate()).toBe(1);
+        })
     })
 
     describe('getDayByTrashType',()=>{
