@@ -1,6 +1,7 @@
 import moment = require('moment-timezone');
+import {encode,decode} from '@msgpack/msgpack';
 import rp = require('request-promise');
-import {RecentTrashDate} from "../client";
+import {RecentTrashDate,CompareResult} from "../client";
 import {DBAdapter} from "./db-adapter";
 import {TextCreator} from "./text-creator";
 import {TrashSchedule,TrashData,TrashTypeValue,EvweekValue,getLogger} from "../index"
@@ -353,7 +354,7 @@ export class TrashScheduleService {
         return result_list;
     }
 
-    async compareTwoText(text1: string, text2: string): Promise<number> {
+    async compareTwoText(text1: string, text2: string): Promise<CompareResult> {
         if(text1 && text2) {
             const option = {
                 uri: process.env.MecabAPI_URL + '/compare',
@@ -361,11 +362,11 @@ export class TrashScheduleService {
                     text1: text1,
                     text2: text2
                 },
-                json: true
+                encoding: null
             };
             logger.info('Compare option:'+JSON.stringify(option));
             return rp(option).then((response: any) => {
-                return response.score as number;
+                return decode(response) as CompareResult;
             }).catch((err: any) => {
                 logger.error(err);
                 throw err;
