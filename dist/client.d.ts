@@ -14,7 +14,7 @@ interface RecentTrashDate {
     recent: Date;
 }
 interface CompareResult {
-    score: Number;
-    match: String;
+    score: number;
+    match: string;
 }
 export { TrashScheduleService, TrashDataText, CompareResult, RecentTrashDate, DBAdapter, TextCreator, GetTrashDataResult };
