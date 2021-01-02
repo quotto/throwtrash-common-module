@@ -1,4 +1,4 @@
-import { RecentTrashDate } from "../client";
+import { RecentTrashDate, CompareResult } from "../client";
 import { DBAdapter } from "./db-adapter";
 import { TextCreator } from "./text-creator";
 import { TrashData, TrashTypeValue, EvweekValue } from "../index";
@@ -58,5 +58,5 @@ export declare class TrashScheduleService {
         target_day: number;
         body: any;
     }[]>;
-    compareTwoText(text1: string, text2: string): Promise<number>;
+    compareTwoText(text1: string, text2: string): Promise<CompareResult>;
 }
