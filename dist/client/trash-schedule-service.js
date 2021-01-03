@@ -330,8 +330,8 @@ class TrashScheduleService {
             const option = {
                 uri: process.env.MecabAPI_URL + '/compare',
                 qs: {
-                    text1: text1,
-                    text2: text2
+                    word1: text1,
+                    word2: text2
                 },
                 encoding: null
             };

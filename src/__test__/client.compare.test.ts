@@ -1,19 +1,20 @@
 /**
  * request-promiseをmockするため別ファイルでテストする
  */
-import {TrashScheduleService,TextCreator, DBAdapter} from "../client";
-
-process.env.MecabAPI_URL = "https://example.com";
 jest.mock("request-promise", ()=>async(option: any)=>{
     if(option.uri === process.env.MecabAPI_URL+"/compare") {
         if(option.qs.text1 === "資源ごみ" && option.qs.text2 === "資源ごみ") {
             return {
+                match: "資源ごみ",
                 score: 1.0
             }
         } 
     }
     throw new Error("request-promise error");
 });
+import {TrashScheduleService,TextCreator, DBAdapter} from "../client";
+
+process.env.MecabAPI_URL = "https://example.com";
 
 class TestDBAdapter implements DBAdapter {
     getUserIDByAccessToken(access_token: string): Promise<string> {
@@ -28,7 +29,8 @@ describe('compareTwoText',()=>{
     const service = new TrashScheduleService("Asia/Tokyo", new TextCreator("ja-JP"), new TestDBAdapter());
     it('正常データ',async()=>{
         const result = await service.compareTwoText('資源ごみ','資源ごみ');
-        expect(result).toBe(1.0);
+        expect(result.match).toBe("資源ごみ");
+        expect(result.score).toBe(1.0);
     });
     it('パラメータエラー', async()=>{
         try {
