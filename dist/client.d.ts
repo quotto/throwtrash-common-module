@@ -13,4 +13,8 @@ interface RecentTrashDate {
     list: Date[];
     recent: Date;
 }
-export { TrashScheduleService, TrashDataText, RecentTrashDate, DBAdapter, TextCreator, GetTrashDataResult };
+interface CompareResult {
+    score: number;
+    match: string;
+}
+export { TrashScheduleService, TrashDataText, CompareResult, RecentTrashDate, DBAdapter, TextCreator, GetTrashDataResult };

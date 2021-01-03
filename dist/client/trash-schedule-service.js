@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TrashScheduleService = void 0;
 const moment = require("moment-timezone");
+const msgpack_1 = require("@msgpack/msgpack");
 const rp = require("request-promise");
 const index_1 = require("../index");
 const logger = index_1.getLogger();
@@ -337,14 +338,14 @@ class TrashScheduleService {
             const option = {
                 uri: process.env.MecabAPI_URL + '/compare',
                 qs: {
-                    text1: text1,
-                    text2: text2
+                    word1: text1,
+                    word2: text2
                 },
-                json: true
+                encoding: null
             };
             logger.info('Compare option:' + JSON.stringify(option));
             return rp(option).then((response) => {
-                return response.score;
+                return msgpack_1.decode(response);
             }).catch((err) => {
                 logger.error(err);
                 throw err;

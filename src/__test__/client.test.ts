@@ -1,10 +1,10 @@
-import {getLogger,TrashData,TrashTypeValue} from "../index";
+import {getLogger,TrashData,TrashTypeValue } from "../index";
 const logger = getLogger();
 logger.setLevel_DEBUG();
 
 import rp = require('request-promise');
 
-import {TextCreator,RecentTrashDate,DBAdapter,TrashScheduleService} from "../client";
+import {TextCreator,RecentTrashDate,DBAdapter,TrashScheduleService, CompareResult} from "../client";
 
 import testData = require("./testdata.json");
 
@@ -662,5 +662,14 @@ describe('getTrashData', function () {
         const result = await service.getTrashData(access_token_005);
         expect(result.status).toBe("error");
         expect(result.msgId).toBe("ERROR_GENERAL");
+    });
+});
+
+describe("compareTwoText",()=>{
+    const service:TrashScheduleService = new TrashScheduleService("Asia/Tokyo", new TextCreator("ja-JP"), new TestDBAdapter());
+    it('有効なデータ',async()=>{
+        const result:CompareResult = await service.compareTwoText("段ボール","紙類")
+        expect(result.match.length).toBeGreaterThan(0);
+        expect(result.score).toBeGreaterThan(0);
     });
 });
