@@ -80,6 +80,7 @@ export function getLogger(): Logger {
 
 export interface EvweekValue {
     weekday: string,
+    interval?: number,
     start: string
 }
 

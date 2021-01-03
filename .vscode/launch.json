@@ -42,5 +42,24 @@
                 "APP_ID": ""
             }
         },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Jest Debug",
+                "program": "${workspaceFolder}/node_modules/jest/bin/jest.js",
+            "args": [
+                "--runInBand",
+                // "-t",
+                // "interval3"
+            ],
+            "internalConsoleOptions": "openOnSessionStart",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "cwd": "${workspaceFolder}",
+            "env":{
+                "APP_ID": ""
+            }
+        },
     ]
 }

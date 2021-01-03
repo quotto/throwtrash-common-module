@@ -101,8 +101,10 @@ export class TrashScheduleService {
 
         const check = (schedule: {type: string, value: string | EvweekValue}): boolean =>{
             if(schedule.type === 'weekday') {
+                // 毎週
                 return Number(schedule.value) === dt.getDay();
             } else if(schedule.type === 'biweek') {
+                // 第x○曜日
                 const matches: RegExpMatchArray | null = (schedule.value as string).match(/(\d)-(\d)/);
                 if(matches) {
                     const weekday = Number(matches[1]);
@@ -119,9 +121,13 @@ export class TrashScheduleService {
                     return weekday === dt.getDay() && turn === nowturn;
                 }
             } else if(schedule.type === 'month') {
+                // 毎月何日 
                 return dt.getDate() === Number(schedule.value);
             } else if(schedule.type === 'evweek') {
+                // 隔週
                 const schedule_value: EvweekValue = schedule.value as EvweekValue;
+                // インターバルの設定がない場合はデフォルト2（週）で算出する
+                schedule_value.interval = schedule_value.interval || 2;
                 if(Number(schedule_value.weekday) === dt.getDay()) {
                     const start_dt:Date = new Date(schedule_value.start);
                     start_dt.setHours(0);
@@ -142,7 +148,7 @@ export class TrashScheduleService {
 
                     // 差が0またはあまりが0であれば隔週に該当
                     // trash_data.schedule = [];
-                    return past_date === 0 || (past_date / 7) % 2 === 0;
+                    return past_date === 0 || (past_date / 7) % schedule_value.interval === 0;
                 }
             }
             return false;
@@ -184,7 +190,7 @@ export class TrashScheduleService {
     }
 
     /**
-     * スケジュールの種類と値に従い今日から最も近い 日にちを返す。
+     * スケジュールの種類と値に従い今日から最も近い日にちを返す。
      * @param {Date} today タイムゾーンを考慮した今日の日付
      * @param {String} schedule_type スケジュールの種類
      * @param {String} schedule_val スケジュールの値
@@ -242,6 +248,9 @@ export class TrashScheduleService {
             }
         } else if(schedule_type === 'evweek') {
             const evweek_val: EvweekValue = schedule_val as EvweekValue;
+            // インターバルが設定されていないデータが存在するためその場合は2に置き換える
+            evweek_val.interval = evweek_val.interval || 2;
+
             const start_dt: Date = new Date(evweek_val.start);
             start_dt.setHours(0);
             start_dt.setMinutes(0);
@@ -264,8 +273,8 @@ export class TrashScheduleService {
             const past_date: number = (current_dt.getTime() - start_dt.getTime()) / 1000 / 60 / 60 / 24;
 
             // 差が0以外かつあまりが0でなければ1週間進める
-            if(past_date != 0 && (past_date / 7) % 2 != 0) {
-                next_dt.setDate(next_dt.getDate()+7);
+            if(past_date != 0 && (past_date / 7) % evweek_val.interval != 0) {
+                next_dt.setDate(next_dt.getDate()+(7*(evweek_val.interval-(Math.abs(past_date/7)))));
             }
         }
         return next_dt;

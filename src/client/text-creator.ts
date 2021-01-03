@@ -143,7 +143,7 @@ export class TextCreator {
                     trash_data.schedules.push(`${this.commonText.schedule.month.replace('%s',day)}`);
                 } else if(schedule.type == 'evweek') {
                     const scheduleValue: EvweekValue = schedule.value as EvweekValue;
-                    trash_data.schedules.push(`${this.commonText.schedule.evweek.replace('%s',this.commonText.weekday[scheduleValue.weekday])}`);
+                    trash_data.schedules.push(`${this.commonText.schedule.evweek.replace('%s1',this.commonText.weekday[scheduleValue.weekday]).replace('%s2',scheduleValue.interval)}`);
                 }
             });
             return_data.push(trash_data);

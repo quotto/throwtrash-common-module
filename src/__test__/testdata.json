@@ -7,7 +7,8 @@
                     "type": "evweek",
                     "value": {
                         "weekday": "3",
-                        "start": "2018-09-09"
+                        "start": "2018-09-09",
+                        "interval": 2
                     }
                 },
                 {
@@ -46,7 +47,8 @@
                     "type": "evweek",
                     "value": {
                         "weekday": "3",
-                        "start": "2018-09-30"
+                        "start": "2018-09-30",
+                        "interval": 2
                     }
                 }
             ]
@@ -58,7 +60,8 @@
                     "type": "evweek",
                     "value": {
                         "weekday": "3",
-                        "start": "2018-09-16"
+                        "start": "2018-09-16",
+                        "interval": 2
                     }
                 }
             ]
@@ -70,7 +73,8 @@
                     "type": "evweek",
                     "value": {
                         "weekday": "3",
-                        "start": "2018-08-26"
+                        "start": "2018-08-26",
+                        "interval": 2
                     }
                 }
             ]
@@ -82,7 +86,8 @@
                     "type": "evweek",
                     "value": {
                         "weekday": "3",
-                        "start": "2018-08-26"
+                        "start": "2018-08-26",
+                        "interval": 2
                     }
                 }
             ]
@@ -94,7 +99,8 @@
                     "type": "evweek",
                     "value": {
                         "weekday": "3",
-                        "start": "2018-08-26"
+                        "start": "2018-08-26",
+                        "interval": 2
                     }
                 }
             ]
@@ -106,7 +112,8 @@
                     "type": "evweek",
                     "value": {
                         "weekday": "3",
-                        "start": "2018-08-26"
+                        "start": "2018-08-26",
+                        "interval": 2
                     }
                 }
             ]
@@ -118,7 +125,8 @@
                     "type": "evweek",
                     "value": {
                         "weekday": "3",
-                        "start": "2018-08-26"
+                        "start": "2018-08-26",
+                        "interval": 2
                     }
                 }
             ]
@@ -182,7 +190,8 @@
                     "type": "evweek",
                     "value": {
                         "weekday": "3",
-                        "start": "2018-09-09"
+                        "start": "2018-09-09",
+                        "interval": 2
                     }
                 }
             ]
@@ -194,7 +203,8 @@
                     "type": "evweek",
                     "value": {
                         "weekday": "3",
-                        "start": "2017-12-17"
+                        "start": "2017-12-17",
+                        "interval": 2
                     }
                 }
             ]
@@ -207,7 +217,8 @@
                     "type": "evweek",
                     "value": {
                         "weekday": "1",
-                        "start": "2018-09-09"
+                        "start": "2018-09-09",
+                        "interval": 2
                     }
                 }
             ]
@@ -219,7 +230,8 @@
                     "type": "evweek",
                     "value": {
                         "weekday": "3",
-                        "start": "2018-09-23"
+                        "start": "2018-09-23",
+                        "interval": 2
                     }
                 }
             ]
@@ -231,7 +243,8 @@
                     "type": "evweek",
                     "value": {
                         "weekday": "3",
-                        "start": "2018-09-30"
+                        "start": "2018-09-30",
+                        "interval": 2
                     }
                 }
             ]
@@ -243,7 +256,8 @@
                     "type": "evweek",
                     "value": {
                         "weekday": "3",
-                        "start": "2018-09-16"
+                        "start": "2018-09-16",
+                        "interval": 2
                     }
                 }
             ]
@@ -255,7 +269,210 @@
                     "type": "evweek",
                     "value": {
                         "weekday": "3",
-                        "start": "2018-08-26"
+                        "start": "2018-08-26",
+                        "interval": 2
+                    }
+                }
+            ]
+        }
+    ],
+    "evweekNoneInterval": [
+        {
+            "type": "burn",
+            "schedules": [
+                {
+                    "type": "evweek",
+                    "value": {
+                        "weekday": "3",
+                        "start": "2020-09-13"
+                    }
+                }
+            ]
+        }
+    ],
+    "evweekInterval3": [
+        {
+            "type": "burn",
+            "schedules": [
+                {
+                    "type": "evweek",
+                    "value": {
+                        "weekday": "3",
+                        "start": "2020-09-06",
+                        "interval": 3
+                    }
+                }
+            ]
+        },
+        {
+            "type": "unburn",
+            "schedules": [
+                {
+                    "type": "evweek",
+                    "value": {
+                        "weekday": "3",
+                        "start": "2019-12-29",
+                        "interval": 3
+                    }
+                }
+            ]
+        },
+        {
+            "type": "other",
+            "trash_val": "新運",
+            "schedules": [
+                {
+                    "type": "evweek",
+                    "value": {
+                        "weekday": "1",
+                        "start": "2020-10-21",
+                        "interval": 3
+                    }
+                }
+            ]
+        },
+        {
+            "type": "plastic",
+            "schedules": [
+                {
+                    "type": "evweek",
+                    "value": {
+                        "weekday": "3",
+                        "start": "2020-09-27",
+                        "interval": 3
+                    }
+                }
+            ]
+        },
+        {
+            "type": "can",
+            "schedules": [
+                {
+                    "type": "evweek",
+                    "value": {
+                        "weekday": "3",
+                        "start": "2020-09-13",
+                        "interval": 3
+                    }
+                }
+            ]
+        },
+        {
+            "type": "paper",
+            "schedules": [
+                {
+                    "type": "evweek",
+                    "value": {
+                        "weekday": "3",
+                        "start": "2020-08-30",
+                        "interval": 3
+                    }
+                }
+            ]
+        },
+        {
+            "type": "bin",
+            "schedules": [
+                {
+                    "type": "evweek",
+                    "value": {
+                        "weekday": "3",
+                        "start": "2020-08-16",
+                        "interval": 3
+                    }
+                }
+            ]
+        }
+    ],
+    "evweekInterval4": [
+        {
+            "type": "burn",
+            "schedules": [
+                {
+                    "type": "evweek",
+                    "value": {
+                        "weekday": "3",
+                        "start": "2020-08-30",
+                        "interval": 4
+                    }
+                }
+            ]
+        },
+        {
+            "type": "unburn",
+            "schedules": [
+                {
+                    "type": "evweek",
+                    "value": {
+                        "weekday": "3",
+                        "start": "2019-12-22",
+                        "interval": 4
+                    }
+                }
+            ]
+        },
+        {
+            "type": "other",
+            "trash_val": "新運",
+            "schedules": [
+                {
+                    "type": "evweek",
+                    "value": {
+                        "weekday": "1",
+                        "start": "2020-10-14",
+                        "interval": 4
+                    }
+                }
+            ]
+        },
+        {
+            "type": "plastic",
+            "schedules": [
+                {
+                    "type": "evweek",
+                    "value": {
+                        "weekday": "3",
+                        "start": "2020-09-27",
+                        "interval": 4
+                    }
+                }
+            ]
+        },
+        {
+            "type": "can",
+            "schedules": [
+                {
+                    "type": "evweek",
+                    "value": {
+                        "weekday": "3",
+                        "start": "2020-09-06",
+                        "interval": 4
+                    }
+                }
+            ]
+        },
+        {
+            "type": "paper",
+            "schedules": [
+                {
+                    "type": "evweek",
+                    "value": {
+                        "weekday": "3",
+                        "start": "2020-08-23",
+                        "interval": 4
+                    }
+                }
+            ]
+        },
+        {
+            "type": "bin",
+            "schedules": [
+                {
+                    "type": "evweek",
+                    "value": {
+                        "weekday": "3",
+                        "start": "2020-08-02",
+                        "interval": 4
                     }
                 }
             ]
@@ -376,7 +593,8 @@
                     "type": "evweek",
                     "value": {
                         "weekday": "0",
-                        "start": "2019-07-28"
+                        "start": "2019-07-28",
+                        "interval": 2
                     }
                 }
             ]

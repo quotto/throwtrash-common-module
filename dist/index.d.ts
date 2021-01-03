@@ -15,6 +15,7 @@ export declare function generateRandomCode(length?: number): string;
 export declare function getLogger(): Logger;
 export interface EvweekValue {
     weekday: string;
+    interval?: number;
     start: string;
 }
 export interface TrashTypeValue {
