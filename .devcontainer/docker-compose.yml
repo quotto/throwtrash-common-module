@@ -1,0 +1,8 @@
+version: "3"
+services: 
+  node:
+    build: .
+    volumes:
+      - ../:/workspace
+      - /workspace/node_modules
+    command: /bin/sh -c "while sleep 1000; do :; done"
