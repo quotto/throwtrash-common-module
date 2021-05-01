@@ -197,10 +197,10 @@ export class TrashScheduleService {
      * @returns {Date} 条件に合致する直近の日にち
      */
     calculateNextDateBySchedule(today: Date, schedule_type: string, schedule_val: string | EvweekValue): Date {
-        const next_dt: Date = new Date(today.getTime());
+        const recently_dt: Date = new Date(today.getTime());
         if(schedule_type === 'weekday') {
             const diff_day: number = Number(schedule_val) - today.getDay();
-            diff_day < 0 ? next_dt.setDate(today.getDate() + (7 + diff_day)) : next_dt.setDate(today.getDate() + diff_day);
+            diff_day < 0 ? recently_dt.setDate(today.getDate() + (7 + diff_day)) : recently_dt.setDate(today.getDate() + diff_day);
         } else if (schedule_type === 'month') {
             let now_date: number = today.getDate();
             while(now_date != Number(schedule_val)) {
@@ -208,13 +208,13 @@ export class TrashScheduleService {
                 const diff_date = Number(schedule_val) - now_date;
                 if(diff_date < 0) {
                     // 現在日>設定日の場合は翌月の1日をセットする
-                    next_dt.setMonth(next_dt.getMonth() + 1);
-                    next_dt.setDate(1);
+                    recently_dt.setMonth(recently_dt.getMonth() + 1);
+                    recently_dt.setDate(1);
                 } else {
                     // 現在日<設定日の場合は差分の分だけ日にちを進める
-                    next_dt.setDate(next_dt.getDate() + diff_date);
+                    recently_dt.setDate(recently_dt.getDate() + diff_date);
                 }
-                now_date = next_dt.getDate();
+                now_date = recently_dt.getDate();
             }
         } else if(schedule_type === 'biweek') {
             // 設定値
@@ -225,22 +225,22 @@ export class TrashScheduleService {
 
                 // 直近の同じ曜日の日にちを設定
                 const diff_day = weekday - today.getDay();
-                diff_day < 0 ? next_dt.setDate(today.getDate() + (7 + diff_day)) : next_dt.setDate(today.getDate() + diff_day);
+                diff_day < 0 ? recently_dt.setDate(today.getDate() + (7 + diff_day)) : recently_dt.setDate(today.getDate() + diff_day);
 
                 // 何週目かを求める
                 let nowturn = 0;
-                let targetdate: number = next_dt.getDate();
+                let targetdate: number = recently_dt.getDate();
                 while(targetdate > 0) {
                     nowturn += 1;
                     targetdate -= 7;
                 }
 
-                let current_month: number = next_dt.getMonth();
+                let current_month: number = recently_dt.getMonth();
                 while(turn != nowturn) {
-                    next_dt.setDate(next_dt.getDate()+7);
-                    if(current_month != next_dt.getMonth()) {
+                    recently_dt.setDate(recently_dt.getDate()+7);
+                    if(current_month != recently_dt.getMonth()) {
                         nowturn = 1;
-                        current_month = next_dt.getMonth();
+                        current_month = recently_dt.getMonth();
                     } else {
                         nowturn += 1;
                     }
@@ -257,27 +257,32 @@ export class TrashScheduleService {
             start_dt.setSeconds(0);
             start_dt.setMilliseconds(0);
 
-            // 直近の同じ曜日の日にちを設定
+            // 直近の同じ曜日の日にちを設定する
             const diff_date: number = Number(evweek_val.weekday) - today.getDay();
-            diff_date < 0 ? next_dt.setDate(today.getDate() + (7 + diff_date)) : next_dt.setDate(today.getDate() + diff_date);
+            diff_date < 0 ? recently_dt.setDate(today.getDate() + (7 + diff_date)) : recently_dt.setDate(today.getDate() + diff_date);
 
             // 直近の同じ曜日の日にちの日曜日を取得
-            const current_dt: Date = new Date(next_dt.getTime());
-            current_dt.setHours(0);
-            current_dt.setMinutes(0);
-            current_dt.setSeconds(0);
-            current_dt.setMilliseconds(0);
-            current_dt.setDate(current_dt.getDate() - current_dt.getDay());
+            const recently_sunday_dt: Date = new Date(recently_dt.getTime());
+            recently_sunday_dt.setHours(0);
+            recently_sunday_dt.setMinutes(0);
+            recently_sunday_dt.setSeconds(0);
+            recently_sunday_dt.setMilliseconds(0);
+            recently_sunday_dt.setDate(recently_sunday_dt.getDate() - recently_sunday_dt.getDay());
 
             // 登録されている日付からの経過日数を求める
-            const past_date: number = (current_dt.getTime() - start_dt.getTime()) / 1000 / 60 / 60 / 24;
+            // 開始日＞判定対象日の場合を考慮して経過日数は絶対値に変換する
+            // (経過日数はこの後の日にちを進める週数判定に利用するため、経過日数がマイナスだと計算結果が誤りとなるため)
+            const past_date: number = Math.abs(
+                (recently_sunday_dt.getTime() - start_dt.getTime()) / 1000 / 60 / 60 / 24
+            );
 
-            // 差が0以外かつあまりが0でなければ1週間進める
-            if(past_date != 0 && (past_date / 7) % evweek_val.interval != 0) {
-                next_dt.setDate(next_dt.getDate()+(7*(evweek_val.interval-(Math.abs(past_date/7)))));
+            // 経過日数≠0かつ開始日からの経過日数/インターバルの余りが≠0であれば直近の同じ曜日は該当週ではないので、そこからインターバル分日にちを進める
+            const mod_of_interval = (past_date / 7) % evweek_val.interval;
+            if(past_date != 0 && mod_of_interval != 0) {
+                recently_dt.setDate(recently_dt.getDate()+(7*(evweek_val.interval-mod_of_interval)));
             }
         }
-        return next_dt;
+        return recently_dt;
     }
 
     /*
