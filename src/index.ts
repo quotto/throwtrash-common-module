@@ -97,7 +97,8 @@ export interface TrashSchedule {
 export interface TrashData {
     type: string,
     trash_val?: string,
-    schedules: Array<TrashSchedule>
+    schedules: Array<TrashSchedule>,
+    excludes?: Array<ExcludeDate>
 }
 
 export interface ExcludeDate {

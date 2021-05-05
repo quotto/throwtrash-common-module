@@ -13,9 +13,10 @@ class TrashScheduleService {
         this.dbAdapter = _dbAdapter;
     }
     /**
-    access_token: アクセストークン
-    target_day: 0:今日,1:明日
-    **/
+     * access_tokenが一致するゴミ出し予定を取得する
+     * @param access_token アクセストークン
+     * @returns 全ゴミ出し予定とエラーがあった場合のステータスコードおよびメッセージID
+     */
     async getTrashData(access_token) {
         try {
             let user_id = access_token;
@@ -47,8 +48,11 @@ class TrashScheduleService {
         }
     }
     /**
-    target_day: 対象とする日を特定するための値。0なら今日、1なら明日……となる。
-    **/
+     * 引数で指定されたn日後を示すDateインスタンスを返す。
+     * このインスタンスはgetXXXが返す値rユーザーロケールとなるようにオフセットが設定される。
+     * @param target_day 今日を基準としたn日後を示す。0なら今日、1なら明日……という感じ
+     * @returns Dateインスタンス
+     */
     calculateLocalTime(target_day) {
         logger.debug(`Timezone: ${this.timezone}`);
         const utcTime = Date.now(); //UTC時刻
@@ -64,9 +68,10 @@ class TrashScheduleService {
         throw new Error("calculateLocalTime Failed -> timeZoneMoment is null");
     }
     /**
-     * 計算対象日を求める
      * 指定された曜日が現時点から何日後かを返す
-    **/
+     * @param target_weekday 対象の曜日
+     * @returns 対象曜日が今日から何日後かを示す値
+     */
     getTargetDayByWeekday(target_weekday) {
         const dt = this.calculateLocalTime(0);
         const now_weekday = dt.getDay();
@@ -77,6 +82,12 @@ class TrashScheduleService {
         }
         return target_day;
     }
+    /**
+     * 指定された日付で指定されたゴミが出せるかをチェックする
+     * @param trash 対象のゴミ
+     * @param dt 指定日
+     * @returns ゴミ出し可能ならゴミの名称を,不可能ならundefinedを返す
+     */
     async getEnableTrashData(trash, dt) {
         const trash_name = trash.type === 'other' && trash.trash_val ? trash.trash_val : this.textCreator.getTrashName(trash.type);
         const trash_data = {
@@ -84,53 +95,58 @@ class TrashScheduleService {
             name: trash_name
         };
         const check = (schedule) => {
-            if (schedule.type === 'weekday') {
-                // 毎週
-                return Number(schedule.value) === dt.getDay();
-            }
-            else if (schedule.type === 'biweek') {
-                // 第x○曜日
-                const matches = schedule.value.match(/(\d)-(\d)/);
-                if (matches) {
-                    const weekday = Number(matches[1]);
-                    const turn = Number(matches[2]);
-                    // 現在何週目かを求める
-                    let nowturn = 0;
-                    let targetdate = dt.getDate();
-                    while (targetdate > 0) {
-                        nowturn += 1;
-                        targetdate -= 7;
-                    }
-                    return weekday === dt.getDay() && turn === nowturn;
+            var _a;
+            // 例外日に設定されているならゴミ出しは不可能
+            // (excludesがundefinedの場合everyが失敗するため、someの否定で判定する)
+            if (!((_a = trash.excludes) === null || _a === void 0 ? void 0 : _a.some(exclude => exclude.month === dt.getMonth() + 1 && exclude.date === dt.getDate()))) {
+                if (schedule.type === 'weekday') {
+                    // 毎週
+                    return Number(schedule.value) === dt.getDay();
                 }
-            }
-            else if (schedule.type === 'month') {
-                // 毎月何日 
-                return dt.getDate() === Number(schedule.value);
-            }
-            else if (schedule.type === 'evweek') {
-                // 隔週
-                const schedule_value = schedule.value;
-                // インターバルの設定がない場合はデフォルト2（週）で算出する
-                schedule_value.interval = schedule_value.interval || 2;
-                if (Number(schedule_value.weekday) === dt.getDay()) {
-                    const start_dt = new Date(schedule_value.start);
-                    start_dt.setHours(0);
-                    start_dt.setMinutes(0);
-                    start_dt.setSeconds(0);
-                    start_dt.setMilliseconds(0);
-                    // 今週の日曜日を求める
-                    const current_dt = new Date(dt.toISOString());
-                    current_dt.setHours(0);
-                    current_dt.setMinutes(0);
-                    current_dt.setSeconds(0);
-                    current_dt.setMilliseconds(0);
-                    current_dt.setDate(current_dt.getDate() - current_dt.getDay());
-                    // 登録されている日付からの経過日数を求める
-                    const past_date = (current_dt.getTime() - start_dt.getTime()) / 1000 / 60 / 60 / 24;
-                    // 差が0またはあまりが0であれば隔週に該当
-                    // trash_data.schedule = [];
-                    return past_date === 0 || (past_date / 7) % schedule_value.interval === 0;
+                else if (schedule.type === 'biweek') {
+                    // 第x○曜日
+                    const matches = schedule.value.match(/(\d)-(\d)/);
+                    if (matches) {
+                        const weekday = Number(matches[1]);
+                        const turn = Number(matches[2]);
+                        // 現在何週目かを求める
+                        let nowturn = 0;
+                        let targetdate = dt.getDate();
+                        while (targetdate > 0) {
+                            nowturn += 1;
+                            targetdate -= 7;
+                        }
+                        return weekday === dt.getDay() && turn === nowturn;
+                    }
+                }
+                else if (schedule.type === 'month') {
+                    // 毎月何日 
+                    return dt.getDate() === Number(schedule.value);
+                }
+                else if (schedule.type === 'evweek') {
+                    // 隔週
+                    const schedule_value = schedule.value;
+                    // インターバルの設定がない場合はデフォルト2（週）で算出する
+                    schedule_value.interval = schedule_value.interval || 2;
+                    if (Number(schedule_value.weekday) === dt.getDay()) {
+                        const start_dt = new Date(schedule_value.start);
+                        start_dt.setHours(0);
+                        start_dt.setMinutes(0);
+                        start_dt.setSeconds(0);
+                        start_dt.setMilliseconds(0);
+                        // 今週の日曜日を求める
+                        const current_dt = new Date(dt.toISOString());
+                        current_dt.setHours(0);
+                        current_dt.setMinutes(0);
+                        current_dt.setSeconds(0);
+                        current_dt.setMilliseconds(0);
+                        current_dt.setDate(current_dt.getDate() - current_dt.getDay());
+                        // 登録されている日付からの経過日数を求める
+                        const past_date = (current_dt.getTime() - start_dt.getTime()) / 1000 / 60 / 60 / 24;
+                        // 差が0またはあまりが0であれば隔週に該当
+                        // trash_data.schedule = [];
+                        return past_date === 0 || (past_date / 7) % schedule_value.interval === 0;
+                    }
                 }
             }
             return false;
@@ -142,9 +158,11 @@ class TrashScheduleService {
         return undefined;
     }
     /**
-    trashes:   DynamoDBから取得したJSON形式のパラメータ。
-    target_day: チェックするn日目。0なら今日、1なら明日......
-    **/
+     * 全ゴミ出しデータの中から指定された日にちにゴミ捨て可能な一覧を返す
+     * @param trashes 全ゴミ出しデータ
+     * @param target_day 指定日、現在日からのn日を指す
+     * @returns その日にゴミ出し可能なゴミの名称一覧
+     */
     async checkEnableTrashes(trashes, target_day) {
         const dt = this.calculateLocalTime(target_day);
         const promise_list = [];
@@ -173,17 +191,25 @@ class TrashScheduleService {
      * @param {String} schedule_val スケジュールの値
      * @returns {Date} 条件に合致する直近の日にち
      */
-    calculateNextDateBySchedule(today, schedule_type, schedule_val) {
+    calculateNextDateBySchedule(today, schedule_type, schedule_val, excludes) {
         const recently_dt = new Date(today.getTime());
         if (schedule_type === 'weekday') {
-            const diff_day = Number(schedule_val) - today.getDay();
-            diff_day < 0 ? recently_dt.setDate(today.getDate() + (7 + diff_day)) : recently_dt.setDate(today.getDate() + diff_day);
+            const exclude_check = (today_dt) => {
+                const diff_day = Number(schedule_val) - today_dt.getDay();
+                const next_date = diff_day < 0 ? today_dt.getDate() + (7 + diff_day) : today_dt.getDate() + diff_day;
+                recently_dt.setDate(next_date);
+                if (excludes.some(exclude => recently_dt.getMonth() + 1 === exclude.month && recently_dt.getDate() === exclude.date)) {
+                    // 例外日に該当した場合は算出した日付を1日進めてそこを基準に再起処理する
+                    recently_dt.setDate(next_date + 1);
+                    exclude_check(recently_dt);
+                }
+            };
+            exclude_check(recently_dt);
         }
         else if (schedule_type === 'month') {
-            let now_date = today.getDate();
-            while (now_date != Number(schedule_val)) {
+            const exclude_check = (today_dt) => {
                 // スケジュールと現在の日にちの差分を取る
-                const diff_date = Number(schedule_val) - now_date;
+                const diff_date = Number(schedule_val) - today_dt.getDate();
                 if (diff_date < 0) {
                     // 現在日>設定日の場合は翌月の1日をセットする
                     recently_dt.setMonth(recently_dt.getMonth() + 1);
@@ -193,66 +219,87 @@ class TrashScheduleService {
                     // 現在日<設定日の場合は差分の分だけ日にちを進める
                     recently_dt.setDate(recently_dt.getDate() + diff_date);
                 }
-                now_date = recently_dt.getDate();
-            }
+                if (excludes.some(exclude => recently_dt.getMonth() + 1 === exclude.month && recently_dt.getDate() === exclude.date)) {
+                    recently_dt.setMonth(recently_dt.getMonth() + 1);
+                    exclude_check(recently_dt);
+                }
+            };
+            exclude_check(recently_dt);
         }
         else if (schedule_type === 'biweek') {
             // 設定値
             const matches = schedule_val.match(/(\d)-(\d)/);
             if (matches) {
-                const weekday = Number(matches[1]);
-                const turn = Number(matches[2]);
-                // 直近の同じ曜日の日にちを設定
-                const diff_day = weekday - today.getDay();
-                diff_day < 0 ? recently_dt.setDate(today.getDate() + (7 + diff_day)) : recently_dt.setDate(today.getDate() + diff_day);
-                // 何週目かを求める
-                let nowturn = 0;
-                let targetdate = recently_dt.getDate();
-                while (targetdate > 0) {
-                    nowturn += 1;
-                    targetdate -= 7;
-                }
-                let current_month = recently_dt.getMonth();
-                while (turn != nowturn) {
-                    recently_dt.setDate(recently_dt.getDate() + 7);
-                    if (current_month != recently_dt.getMonth()) {
-                        nowturn = 1;
-                        current_month = recently_dt.getMonth();
-                    }
-                    else {
+                const exclude_check = (today_dt) => {
+                    const weekday = Number(matches[1]);
+                    const turn = Number(matches[2]);
+                    // 直近の同じ曜日の日にちを設定
+                    const diff_day = weekday - today_dt.getDay();
+                    diff_day < 0 ? recently_dt.setDate(today_dt.getDate() + (7 + diff_day)) : recently_dt.setDate(today_dt.getDate() + diff_day);
+                    // 何週目かを求める
+                    let nowturn = 0;
+                    let targetdate = recently_dt.getDate();
+                    while (targetdate > 0) {
                         nowturn += 1;
+                        targetdate -= 7;
                     }
-                }
+                    let current_month = recently_dt.getMonth();
+                    while (turn != nowturn) {
+                        recently_dt.setDate(recently_dt.getDate() + 7);
+                        if (current_month != recently_dt.getMonth()) {
+                            nowturn = 1;
+                            current_month = recently_dt.getMonth();
+                        }
+                        else {
+                            nowturn += 1;
+                        }
+                    }
+                    if (excludes.some(exclude => recently_dt.getMonth() + 1 === exclude.month && recently_dt.getDate() === exclude.date)) {
+                        // 例外日指定されていたら算出した日付の翌月1日に設定してそこを基準に再起処理する
+                        recently_dt.setMonth(recently_dt.getMonth() + 1);
+                        recently_dt.setDate(1);
+                        exclude_check(recently_dt);
+                    }
+                };
+                exclude_check(recently_dt);
             }
         }
         else if (schedule_type === 'evweek') {
             const evweek_val = schedule_val;
             // インターバルが設定されていないデータが存在するためその場合は2に置き換える
-            evweek_val.interval = evweek_val.interval || 2;
+            const interval = evweek_val.interval || 2;
             const start_dt = new Date(evweek_val.start);
             start_dt.setHours(0);
             start_dt.setMinutes(0);
             start_dt.setSeconds(0);
             start_dt.setMilliseconds(0);
-            // 直近の同じ曜日の日にちを設定する
-            const diff_date = Number(evweek_val.weekday) - today.getDay();
-            diff_date < 0 ? recently_dt.setDate(today.getDate() + (7 + diff_date)) : recently_dt.setDate(today.getDate() + diff_date);
-            // 直近の同じ曜日の日にちの日曜日を取得
-            const recently_sunday_dt = new Date(recently_dt.getTime());
-            recently_sunday_dt.setHours(0);
-            recently_sunday_dt.setMinutes(0);
-            recently_sunday_dt.setSeconds(0);
-            recently_sunday_dt.setMilliseconds(0);
-            recently_sunday_dt.setDate(recently_sunday_dt.getDate() - recently_sunday_dt.getDay());
-            // 登録されている日付からの経過日数を求める
-            // 開始日＞判定対象日の場合を考慮して経過日数は絶対値に変換する
-            // (経過日数はこの後の日にちを進める週数判定に利用するため、経過日数がマイナスだと計算結果が誤りとなるため)
-            const past_date = Math.abs((recently_sunday_dt.getTime() - start_dt.getTime()) / 1000 / 60 / 60 / 24);
-            // 経過日数≠0かつ開始日からの経過日数/インターバルの余りが≠0であれば直近の同じ曜日は該当週ではないので、そこからインターバル分日にちを進める
-            const mod_of_interval = (past_date / 7) % evweek_val.interval;
-            if (past_date != 0 && mod_of_interval != 0) {
-                recently_dt.setDate(recently_dt.getDate() + (7 * (evweek_val.interval - mod_of_interval)));
-            }
+            const exclude_check = (today_dt) => {
+                // 直近の同じ曜日の日にちを設定する
+                const diff_date = Number(evweek_val.weekday) - today_dt.getDay();
+                diff_date < 0 ? recently_dt.setDate(today_dt.getDate() + (7 + diff_date)) : recently_dt.setDate(today_dt.getDate() + diff_date);
+                // 直近の同じ曜日の日にちの日曜日を取得
+                const recently_sunday_dt = new Date(recently_dt.getTime());
+                recently_sunday_dt.setHours(0);
+                recently_sunday_dt.setMinutes(0);
+                recently_sunday_dt.setSeconds(0);
+                recently_sunday_dt.setMilliseconds(0);
+                recently_sunday_dt.setDate(recently_sunday_dt.getDate() - recently_sunday_dt.getDay());
+                // 登録されている日付からの経過日数を求める
+                // 開始日＞判定対象日の場合を考慮して経過日数は絶対値に変換する
+                // (経過日数はこの後の日にちを進める週数判定に利用するため、経過日数がマイナスだと計算結果が誤りとなるため)
+                const past_date = Math.abs((recently_sunday_dt.getTime() - start_dt.getTime()) / 1000 / 60 / 60 / 24);
+                // 経過日数≠0かつ開始日からの経過日数/インターバルの余りが≠0であれば直近の同じ曜日は該当週ではないので、そこからインターバル分日にちを進める
+                const mod_of_interval = (past_date / 7) % interval;
+                if (past_date != 0 && mod_of_interval != 0) {
+                    recently_dt.setDate(recently_dt.getDate() + (7 * (interval - mod_of_interval)));
+                }
+                if (excludes.some(exclude => recently_dt.getMonth() + 1 === exclude.month && recently_dt.getDate() === exclude.date)) {
+                    // 例外日指定されていたら算出した日付を1日進めてそこを基準委再起処理する
+                    recently_dt.setDate(recently_dt.getDate() + 1);
+                    exclude_check(recently_dt);
+                }
+            };
+            exclude_check(recently_dt);
         }
         return recently_dt;
     }
@@ -280,6 +327,7 @@ class TrashScheduleService {
                     match_dates.push({
                         key: key,
                         schedules: trash.schedules,
+                        excludes: trash.excludes ? trash.excludes : [],
                         list: [],
                         recent: new Date() // 最終的には直近のゴミ出し日が入るので初期値は何でも良い
                     });
@@ -290,7 +338,7 @@ class TrashScheduleService {
         match_dates.forEach((recentTrashData) => {
             let recently = new Date('9999/12/31');
             recentTrashData.schedules.forEach((schedule) => {
-                const next_dt = this.calculateNextDateBySchedule(today_dt, schedule.type, schedule.value);
+                const next_dt = this.calculateNextDateBySchedule(today_dt, schedule.type, schedule.value, recentTrashData.excludes);
                 if (recently.getTime() > next_dt.getTime()) {
                     recently = new Date(next_dt.getTime());
                 }
