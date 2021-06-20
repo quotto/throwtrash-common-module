@@ -1,4 +1,4 @@
-import { TrashSchedule } from "./index";
+import { ExcludeDate, TrashSchedule } from "./index";
 import { TrashScheduleService, GetTrashDataResult } from "./client/trash-schedule-service";
 import { DBAdapter } from "./client/db-adapter";
 import { TextCreator } from "./client/text-creator";
@@ -10,6 +10,7 @@ interface TrashDataText {
 interface RecentTrashDate {
     key: string;
     schedules: TrashSchedule[];
+    excludes: ExcludeDate[];
     list: Date[];
     recent: Date;
 }

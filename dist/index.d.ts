@@ -30,5 +30,10 @@ export interface TrashData {
     type: string;
     trash_val?: string;
     schedules: Array<TrashSchedule>;
+    excludes?: Array<ExcludeDate>;
+}
+export interface ExcludeDate {
+    month: number;
+    date: number;
 }
 export * as client from "./client";

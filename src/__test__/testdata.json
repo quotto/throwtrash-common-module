@@ -77,6 +77,8 @@
                         "interval": 2
                     }
                 }
+            ],
+            "excludes": [
             ]
         },
         {
@@ -179,7 +181,17 @@
                 { "type": "weekday", "value": "4" }, 
                 { "type": "month", "value": "11" }, 
                 { "type": "none", "value": "" } 
-            ] 
+            ] ,
+            "excludes": [
+                {
+                    "month": 2,
+                    "date": 10
+                },
+                {
+                    "month": 2,
+                    "date": 22
+                }
+            ]
         } 
     ],
     "evweek": [
