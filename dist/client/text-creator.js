@@ -119,7 +119,6 @@ class TextCreator {
                 }
                 else if (schedule.type == 'month') {
                     const scheduleValue = schedule.value;
-                    trash_data.schedules.push(`${this.commonText.schedule.weekday.replace('%s', this.commonText.weekday[scheduleValue])}`);
                     const day = this.locale === 'en-US' ? get_num_sufix(Number(scheduleValue)) : scheduleValue;
                     trash_data.schedules.push(`${this.commonText.schedule.month.replace('%s', day)}`);
                 }

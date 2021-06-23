@@ -22,7 +22,7 @@ export class TextCreator {
     private commonText: any;
 
     /**
-     * 
+     *
      * @param {string} locale  デバイスから取得できるロケール情報
      */
     constructor(locale: string) {
@@ -138,7 +138,6 @@ export class TextCreator {
                     }
                 } else if(schedule.type == 'month') {
                     const scheduleValue: string = schedule.value as string;
-                    trash_data.schedules.push(`${this.commonText.schedule.weekday.replace('%s',this.commonText.weekday[scheduleValue])}`);
                     const day = this.locale === 'en-US' ? get_num_sufix(Number(scheduleValue)) : scheduleValue;
                     trash_data.schedules.push(`${this.commonText.schedule.month.replace('%s',day)}`);
                 } else if(schedule.type == 'evweek') {
