@@ -268,142 +268,159 @@ describe('ja-JP',function(){
         describe('weekday',()=>{
             it('weekday:当日',()=>{
                 const next_dt = service.calculateNextDateBySchedule(today, 'weekday', '3', []);
+                expect(next_dt.getMonth()+1).toBe(11);
                 expect(next_dt.getDate()).toBe(27);
             });
             it('weekday:同じ週',()=>{
                 const next_dt = service.calculateNextDateBySchedule(today, 'weekday', '6', [{month: 11, date: 28}]);
+                expect(next_dt.getMonth()+1).toBe(11);
                 expect(next_dt.getDate()).toBe(30);
             });
             it('weekday:次の週',()=>{
                 const next_dt = service.calculateNextDateBySchedule(new Date('2019//11/20'), 'weekday', '2', []);
+                expect(next_dt.getMonth()+1).toBe(11);
                 expect(next_dt.getDate()).toBe(26);
             });
             it('weekday:月替り',()=>{
                 const next_dt = service.calculateNextDateBySchedule(new Date('2019//11/27'), 'weekday', '2', []);
-                expect(next_dt.getMonth()).toBe(11);
+                expect(next_dt.getMonth()+1).toBe(12);
                 expect(next_dt.getDate()).toBe(3);
             });
             it('weekday:例外日に該当', ()=>{
                 const next_dt = service.calculateNextDateBySchedule(today, 'weekday', '6', [{month: 11, date: 29},{month: 11, date: 30}]);
-                expect(next_dt.getMonth()).toBe(11);
+                expect(next_dt.getMonth()+1).toBe(12);
                 expect(next_dt.getDate()).toBe(7);
             })
         });
         describe('month', ()=>{
             it('month:当日',()=>{
-                const next_dt = service.calculateNextDateBySchedule(today, 'month', "27", [{month: 12, date: 27}]);
+                const next_dt = service.calculateNextDateBySchedule(today, 'month', "27",[]);
+                expect(next_dt.getMonth()+1).toBe(11);
                 expect(next_dt.getDate()).toBe(27);
             });
             it('month:同じ月',()=>{
                 const next_dt = service.calculateNextDateBySchedule(today, 'month', "29", []);
+                expect(next_dt.getMonth()+1).toBe(11);
                 expect(next_dt.getDate()).toBe(29);
             });
-            it('month:月替り',()=>{
+            it('month:月替り1日',()=>{
                 const next_dt = service.calculateNextDateBySchedule(today, 'month', "1", []);
-                expect(next_dt.getMonth()).toBe(11);
+                expect(next_dt.getMonth()+1).toBe(12);
                 expect(next_dt.getDate()).toBe(1);
+            });
+            it('month:月替り',()=>{
+                const next_dt = service.calculateNextDateBySchedule(today, 'month', "4", []);
+                expect(next_dt.getMonth()+1).toBe(12);
+                expect(next_dt.getDate()).toBe(4);
             });
             it('month:例外日に該当',()=>{
                 const next_dt = service.calculateNextDateBySchedule(today, 'month', "29", [{month: 11, date: 29}]);
-                expect(next_dt.getMonth()).toBe(11);
+                expect(next_dt.getMonth()+1).toBe(12);
                 expect(next_dt.getDate()).toBe(29);
             });
         });
         describe('biweek',()=>{
             it('biweek:当日',()=>{
                 const next_dt = service.calculateNextDateBySchedule(new Date('2019/11/22'), 'biweek', '5-4', [{month: 11, date:23}]);
+                expect(next_dt.getMonth()+1).toBe(11);
                 expect(next_dt.getDate()).toBe(22);
 
             });
             it('biweek:同じ週',()=>{
                 const next_dt = service.calculateNextDateBySchedule(new Date('2019/11/22'), 'biweek', '6-4', []);
+                expect(next_dt.getMonth()+1).toBe(11);
                 expect(next_dt.getDate()).toBe(23);
             });
             it('biweek:次の週',()=>{
                 const next_dt = service.calculateNextDateBySchedule(new Date('2019/11/22'), 'biweek', '0-4', []);
+                expect(next_dt.getMonth()+1).toBe(11);
                 expect(next_dt.getDate()).toBe(24);
             });
             it('biweek月替り',()=>{
                 const next_dt = service.calculateNextDateBySchedule(new Date('2019/11/22'), 'biweek', '0-1', []);
-                expect(next_dt.getMonth()).toBe(11);
+                expect(next_dt.getMonth()+1).toBe(12);
                 expect(next_dt.getDate()).toBe(1);
             });
             it('biweek:例外日に該当',()=>{
                 const next_dt = service.calculateNextDateBySchedule(new Date('2019/11/22'), 'biweek', '0-4', [{month: 11, date:22},{month: 11, date:24}]);
-                expect(next_dt.getMonth()).toBe(11);
+                expect(next_dt.getMonth()+1).toBe(12);
                 expect(next_dt.getDate()).toBe(22);
             });
         });
         describe('evweek',()=>{
             it('インターバル2:当日', ()=>{
                 const next_dt = service.calculateNextDateBySchedule(new Date('2019/11/22'), 'evweek', {start: '2019-11-17',weekday: '5', interval: 2}, []);
+                expect(next_dt.getMonth()+1).toBe(11);
                 expect(next_dt.getDate()).toBe(22);
             })
             it('インターバル2:同じ週', ()=>{
                 const next_dt = service.calculateNextDateBySchedule(new Date('2019/11/21'), 'evweek', {start: '2019-11-3',weekday: '5', interval: 2}, []);
+                expect(next_dt.getMonth()+1).toBe(11);
                 expect(next_dt.getDate()).toBe(22);
             });
             it('インターバル2:次の週', ()=>{
                 const next_dt = service.calculateNextDateBySchedule(new Date('2019/11/21'), 'evweek', {start: '2019-11-10',weekday: '5', interval: 2}, []);
+                expect(next_dt.getMonth()+1).toBe(11);
                 expect(next_dt.getDate()).toBe(29);
             });
             it('インターバル2:開始が未来日', ()=>{
                 const next_dt = service.calculateNextDateBySchedule(new Date('2019/11/21'), 'evweek', {start: '2019-11-24',weekday: '5', interval: 2}, [{month: 11, date: 30},{month: 12, date:29}]);
+                expect(next_dt.getMonth()+1).toBe(11);
                 expect(next_dt.getDate()).toBe(29);
             });
             it('インターバル2:月跨ぎ', ()=>{
                 const next_dt = service.calculateNextDateBySchedule(new Date('2019/11/21'), 'evweek', {start: '2019-11-17',weekday: '1', interval: 2}, []);
-                expect(next_dt.getMonth()).toBe(11);
+                expect(next_dt.getMonth()+1).toBe(12);
                 expect(next_dt.getDate()).toBe(2);
             });
             it('インターバル2:スタート週の翌月', ()=>{
                 const next_dt = service.calculateNextDateBySchedule(new Date('2019/12/11'), 'evweek', {start: '2019-11-17',weekday: '1', interval: 2}, []);
-                expect(next_dt.getMonth()).toBe(11);
+                expect(next_dt.getMonth()+1).toBe(12);
                 expect(next_dt.getDate()).toBe(16);
             });
             it('インターバル2:スタート週の翌々月', ()=>{
                 const next_dt = service.calculateNextDateBySchedule(new Date('2019/12/11'), 'evweek', {start: '2019-10-27',weekday: '1', interval: 2}, []);
-                expect(next_dt.getMonth()).toBe(11);
+                expect(next_dt.getMonth()+1).toBe(12);
                 expect(next_dt.getDate()).toBe(23);
             });
             it('インターバル2:例外日に該当', ()=>{
                 const next_dt = service.calculateNextDateBySchedule(new Date('2019/11/21'), 'evweek', {start: '2019-11-24',weekday: '5', interval: 2}, [{month: 11, date: 30},{month: 11, date:29}]);
-                expect(next_dt.getMonth()).toBe(11);
+                expect(next_dt.getMonth()+1).toBe(12);
                 expect(next_dt.getDate()).toBe(13);
             });
             it('インターバルなし',()=>{
                 const next_dt = service.calculateNextDateBySchedule(new Date('2019/11/21'), 'evweek', {start: '2019-11-17',weekday: '1'}, [{month: 10, date: 22}]);
-                expect(next_dt.getMonth()).toBe(11);
+                expect(next_dt.getMonth()+1).toBe(12);
                 expect(next_dt.getDate()).toBe(2);
             });
             it('インターバルなし:例外日に該当',()=>{
                 const next_dt = service.calculateNextDateBySchedule(new Date('2019/11/21'), 'evweek', {start: '2019-11-17',weekday: '1'}, [{month: 12, date: 2}]);
-                expect(next_dt.getMonth()).toBe(11);
+                expect(next_dt.getMonth()+1).toBe(12);
                 expect(next_dt.getDate()).toBe(16);
             });
             it('インターバル3',()=>{
                 const next_dt = service.calculateNextDateBySchedule(new Date('2020/09/30'), 'evweek', {start: '2020-09-06',weekday: '4',interval:3}, []);
-                expect(next_dt.getMonth()).toBe(9);
+                expect(next_dt.getMonth()+1).toBe(10);
                 expect(next_dt.getDate()).toBe(1);
             });
             it('インターバル3:開始日の翌々月',()=>{
                 const next_dt = service.calculateNextDateBySchedule(new Date('2020/09/30'), 'evweek', {start: '2020-07-26',weekday: '4',interval:3}, []);
-                expect(next_dt.getMonth()).toBe(9);
+                expect(next_dt.getMonth()+1).toBe(10);
                 expect(next_dt.getDate()).toBe(1);
             });
             it('インターバル3:例外日に該当',()=>{
                 const next_dt = service.calculateNextDateBySchedule(new Date('2020/09/30'), 'evweek', {start: '2020-07-26',weekday: '4',interval:3}, [{month: 10, date: 1}]);
-                expect(next_dt.getMonth()).toBe(9);
+                expect(next_dt.getMonth()+1).toBe(10);
                 expect(next_dt.getDate()).toBe(22);
             });
             it('インターバル4',()=>{
                 const next_dt = service.calculateNextDateBySchedule(new Date('2020/09/30'), 'evweek', {start: '2020-08-30',weekday: '4',interval:4}, []);
-                expect(next_dt.getMonth()).toBe(9);
+                expect(next_dt.getMonth()+1).toBe(10);
                 expect(next_dt.getDate()).toBe(1);
             }),
             it('インターバル4:例外日に該当',()=>{
                 const next_dt = service.calculateNextDateBySchedule(new Date('2020/09/30'), 'evweek', {start: '2020-07-05',weekday: '4',interval:4}, [{month: 10, date: 1}]);
-                expect(next_dt.getMonth()).toBe(9);
+                expect(next_dt.getMonth()+1).toBe(10);
                 expect(next_dt.getDate()).toBe(29);
             })
         });
@@ -424,14 +441,18 @@ describe('ja-JP',function(){
                 Date.now = jest.fn().mockReturnValue(Date.UTC(2019,2,16,15,0,0,0));
                 const result: RecentTrashDate[] = service.getDayByTrashType(trashes,'burn');
                 console.log(JSON.stringify(result,null,2));
+                expect(result[0].list[0].getMonth()+1).toBe(3);
                 expect(result[0].list[0].getDate()).toBe(17);
+                expect(result[0].list[1].getMonth()+1).toBe(3);
                 expect(result[0].list[1].getDate()).toBe(23);
                 expect(result[0].recent.getDate()).toBe(17);
             });
             it('当日が金曜日',()=>{
                 Date.now = jest.fn().mockReturnValue(Date.UTC(2019,2,14,15,0,0,0));
                 const result = service.getDayByTrashType(trashes,"burn");
+                expect(result[0].list[0].getMonth()+1).toBe(3);
                 expect(result[0].list[0].getDate()).toBe(17);
+                expect(result[0].list[1].getMonth()+1).toBe(3);
                 expect(result[0].list[1].getDate()).toBe(16);
                 expect(result[0].recent.getDate()).toBe(16);
             });
@@ -460,7 +481,7 @@ describe('ja-JP',function(){
                 expect(result[0].recent.getDate()).toBe(15);
             });
         });
-        describe("biweek",()=>{ 
+        describe("biweek",()=>{
             it("第n曜日が一致する日にちでの計算",()=>{
                 Date.now = jest.fn().mockReturnValue(Date.UTC(2019,2,12,15,0,0,0));
                 const trashes = [
@@ -498,7 +519,9 @@ describe('ja-JP',function(){
                     }
                 ];
                 const result = service.getDayByTrashType(trashes, "burn");
+                expect(result[0].list[0].getMonth()+1).toBe(3);
                 expect(result[0].list[0].getDate()).toBe(15);
+                expect(result[0].list[1].getMonth()+1).toBe(3);
                 expect(result[0].list[1].getDate()).toBe(22);
                 expect(`${result[0].list[2].getMonth() + 1}-${result[0].list[2].getDate()}`).toBe("4-12");
                 expect(result[0].recent.getDate()).toBe(15);
@@ -514,6 +537,7 @@ describe('ja-JP',function(){
                     }
                 ];
                 const result = service.getDayByTrashType(trashes, "burn");
+                expect(result[0].list[0].getMonth()+1).toBe(3);
                 expect(result[0].list[0].getDate()).toBe(21);
                 expect(result[0].recent.getDate()).toBe(21);
             });
@@ -522,120 +546,131 @@ describe('ja-JP',function(){
             beforeAll(()=>{
                 Date.now = jest.fn().mockReturnValue(Date.UTC(2019,2,14,15,0,0,0));
             });
-            describe("今週/翌週/当日",()=>{
+            it("インターバル2",()=>{
                 const trashes = [
                     {
                         type: "burn",
                         schedules: [
-                            {type: "evweek",value:{weekday: "6",start:"2019-02-24", interval: 2}},
-                            {type: "evweek",value:{weekday: "6",start:"2019-03-03", interval: 2}},
-                            {type: "evweek",value:{weekday: "5",start:"2019-03-10", interval: 2}}
+                            {type: "evweek",value:{weekday: "6",start:"2019-02-24", interval: 2}}, // 今週の土曜日に該当
+                            {type: "evweek",value:{weekday: "6",start:"2019-03-03", interval: 2}}, // 翌週の土曜日に該当
+                            {type: "evweek",value:{weekday: "5",start:"2019-03-10", interval: 2}}  // 当日(金曜日)に該当
                         ]
                     }
                 ];
-                it("インターバル2",()=>{
-                    const result = service.getDayByTrashType(trashes,"burn");
-                    expect(result[0].list[0].getDate()).toBe(16);
-                    expect(result[0].list[1].getDate()).toBe(23);
-                    expect(result[0].list[2].getDate()).toBe(15);
-                    expect(result[0].recent.getDate()).toBe(15);
-                });
-                it('インターバル2: 開始週の翌月',()=>{
-                    const custom_trashes = [
-                        {
-                            type: "burn",
-                            schedules: [
-                                {type: "evweek",value:{weekday: "6",start:"2019-01-13", interval: 2}},
-                                {type: "weekday",value: "0"}
-                            ]
-                        }
-                    ];    
-                    const result = service.getDayByTrashType(custom_trashes,"burn");
-                    expect(result[0].list[0].getDate()).toBe(16);
-                    expect(result[0].list[1].getDate()).toBe(17);
-                    expect(result[0].recent.getDate()).toBe(16);
-                });
-                it('インターバル2: 開始週の翌々月',()=>{
-                    const custom_trashes = [
-                        {
-                            type: "burn",
-                            schedules: [
-                                {type: "evweek",value:{weekday: "6",start:"2018-12-30", interval: 2}},
-                            ]
-                        }
-                    ];    
-                    const result = service.getDayByTrashType(custom_trashes,"burn");
-                    expect(result[0].list[0].getDate()).toBe(16);
-                    expect(result[0].recent.getDate()).toBe(16);
-                });
-                it("インターバル3",()=>{
-                    const trashes = [
-                        {
-                            type: "burn",
-                            schedules: [
-                                {type: "evweek",value:{weekday: "6",start:"2019-02-24", interval: 3}},
-                                {type: "evweek",value:{weekday: "6",start:"2019-03-03", interval: 3}},
-                                {type: "evweek",value:{weekday: "6",start:"2019-03-10", interval: 3}},
-                            ]
-                        }
-                    ];
-                    const result = service.getDayByTrashType(trashes,"burn");
-                    expect(result[0].list[0].getDate()).toBe(23);
-                    expect(result[0].list[1].getDate()).toBe(30);
-                    expect(result[0].list[2].getDate()).toBe(16);
-                    expect(result[0].recent.getDate()).toBe(16);
-                }),
-                it("インターバル4",()=>{
-                    const trashes = [
-                        {
-                            type: "burn",
-                            schedules: [
-                                {type: "evweek",value:{weekday: "6",start:"2019-02-24", interval: 4}},
-                                {type: "evweek",value:{weekday: "6",start:"2019-03-03", interval: 4}},
-                                {type: "evweek",value:{weekday: "6",start:"2019-03-10", interval: 4}},
-                            ]
-                        }
-                    ];
-                    const result = service.getDayByTrashType(trashes,"burn");
-                    expect(result[0].list[0].getDate()).toBe(30);
-                    expect(result[0].list[1].getDate()).toBe(6);
-                    expect(result[0].list[2].getDate()).toBe(16);
-                    expect(result[0].recent.getDate()).toBe(16);
-                })
+
+                const result = service.getDayByTrashType(trashes,"burn");
+                expect(result[0].list[0].getMonth()+1).toBe(3);
+                expect(result[0].list[0].getDate()).toBe(16);
+                expect(result[0].list[1].getMonth()+1).toBe(3);
+                expect(result[0].list[1].getDate()).toBe(23);
+                expect(result[0].list[2].getMonth()+1).toBe(3);
+                expect(result[0].list[2].getDate()).toBe(15);
+                expect(result[0].recent.getDate()).toBe(15);
             });
-        });
-        describe('nomatch',()=>{
-            it('該当するごみが登録されていない',()=>{
-                const trashes = [
+            it('インターバル2: 開始週の翌月',()=>{
+                const custom_trashes = [
                     {
-                        type: 'burn',
-                        schedules: [{type: 'weekday',value:'0'}]
+                        type: "burn",
+                        schedules: [
+                            {type: "evweek",value:{weekday: "6",start:"2019-01-13", interval: 2}},
+                            {type: "weekday",value: "0"}
+                        ]
                     }
                 ];
-                const result = service.getDayByTrashType(trashes,'unburn');
-                expect(result.length).toBe(0);
+                const result = service.getDayByTrashType(custom_trashes,"burn");
+                expect(result[0].list[0].getMonth()+1).toBe(3);
+                expect(result[0].list[0].getDate()).toBe(16);
+                expect(result[0].list[1].getMonth()+1).toBe(3);
+                expect(result[0].list[1].getDate()).toBe(17);
+                expect(result[0].recent.getDate()).toBe(16);
             });
-        });
-        describe('other match',()=>{
-            beforeAll(()=>{
-                Date.now = jest.fn().mockReturnValue(Date.UTC(2019,2,14,15,0,0,0));
-            });
-            it('複数のother登録',()=>{
-                const trashes = [
-                    { type: 'other', trash_val: '金属', schedules: [{type: 'weekday',value:'5'},{type: 'month',value:'30'}] },
-                    { type: 'other', trash_val: 'リソース', schedules: [{type: 'weekday',value:'5'},{type: 'month',value:'30'}] }
+            it('インターバル2: 開始週の翌々月',()=>{
+                const custom_trashes = [
+                    {
+                        type: "burn",
+                        schedules: [
+                            {type: "evweek",value:{weekday: "6",start:"2018-12-30", interval: 2}},
+                        ]
+                    }
                 ];
-                const result = service.getDayByTrashType(trashes,'other');
-                console.log(result);
-                expect(result[0].list.length).toBe(2);
-                expect(result[0].key).toBe("金属");
-                expect(result[0].list[0].getDate()).toBe(15);
-                expect(result[0].recent.getDate()).toBe(15);
-                expect(result[1].list.length).toBe(2);
-                expect(result[1].key).toBe("リソース");
-                expect(result[1].list[0].getDate()).toBe(15);
-                expect(result[1].recent.getDate()).toBe(15);
+                const result = service.getDayByTrashType(custom_trashes,"burn");
+                expect(result[0].list[0].getMonth()+1).toBe(3);
+                expect(result[0].list[0].getDate()).toBe(16);
+                expect(result[0].recent.getDate()).toBe(16);
             });
+            it("インターバル3",()=>{
+                const trashes = [
+                    {
+                        type: "burn",
+                        schedules: [
+                            {type: "evweek",value:{weekday: "6",start:"2019-02-24", interval: 3}},
+                            {type: "evweek",value:{weekday: "6",start:"2019-03-03", interval: 3}},
+                            {type: "evweek",value:{weekday: "6",start:"2019-03-10", interval: 3}},
+                        ]
+                    }
+                ];
+                const result = service.getDayByTrashType(trashes,"burn");
+                expect(result[0].list[0].getMonth()+1).toBe(3);
+                expect(result[0].list[0].getDate()).toBe(23);
+                expect(result[0].list[1].getMonth()+1).toBe(3);
+                expect(result[0].list[1].getDate()).toBe(30);
+                expect(result[0].list[2].getMonth()+1).toBe(3);
+                expect(result[0].list[2].getDate()).toBe(16);
+                expect(result[0].recent.getDate()).toBe(16);
+            }),
+            it("インターバル4",()=>{
+                const trashes = [
+                    {
+                        type: "burn",
+                        schedules: [
+                            {type: "evweek",value:{weekday: "6",start:"2019-02-24", interval: 4}},
+                            {type: "evweek",value:{weekday: "6",start:"2019-03-03", interval: 4}},
+                            {type: "evweek",value:{weekday: "6",start:"2019-03-10", interval: 4}},
+                        ]
+                    }
+                ];
+                const result = service.getDayByTrashType(trashes,"burn");
+                expect(result[0].list[0].getMonth()+1).toBe(3);
+                expect(result[0].list[0].getDate()).toBe(30);
+                expect(result[0].list[1].getMonth()+1).toBe(4);
+                expect(result[0].list[1].getDate()).toBe(6);
+                expect(result[0].list[2].getMonth()+1).toBe(3);
+                expect(result[0].list[2].getDate()).toBe(16);
+                expect(result[0].recent.getDate()).toBe(16);
+            })
+        });
+    });
+    describe('nomatch',()=>{
+        it('該当するごみが登録されていない',()=>{
+            const trashes = [
+                {
+                    type: 'burn',
+                    schedules: [{type: 'weekday',value:'0'}]
+                }
+            ];
+            const result = service.getDayByTrashType(trashes,'unburn');
+            expect(result.length).toBe(0);
+        });
+    });
+    describe('other match',()=>{
+        beforeAll(()=>{
+            Date.now = jest.fn().mockReturnValue(Date.UTC(2019,2,14,15,0,0,0));
+        });
+        it('複数のother登録',()=>{
+            const trashes = [
+                { type: 'other', trash_val: '金属', schedules: [{type: 'weekday',value:'5'},{type: 'month',value:'30'}] },
+                { type: 'other', trash_val: 'リソース', schedules: [{type: 'weekday',value:'5'},{type: 'month',value:'30'}] }
+            ];
+            const result = service.getDayByTrashType(trashes,'other');
+            console.log(result);
+            expect(result[0].list.length).toBe(2);
+            expect(result[0].key).toBe("金属");
+            expect(result[0].list[0].getDate()).toBe(15);
+            expect(result[0].recent.getDate()).toBe(15);
+            expect(result[1].list.length).toBe(2);
+            expect(result[1].key).toBe("リソース");
+            expect(result[1].list[0].getDate()).toBe(15);
+            expect(result[1].recent.getDate()).toBe(15);
         });
     });
 });
@@ -684,7 +719,7 @@ describe('getTrashData', function () {
 
     // 存在しないアクセストークン
     const access_token_002 = "bbbbbbbbb";
-    
+
     // 旧型のアクセストークン
     const access_token_003 = "10b38bbe-8a0f-4afc-afa9-c00aaac1d1df";
 
