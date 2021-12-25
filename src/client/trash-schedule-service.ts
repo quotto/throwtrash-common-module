@@ -4,13 +4,14 @@ import rp = require('request-promise');
 import {RecentTrashDate,CompareResult} from "../client";
 import {DBAdapter} from "./db-adapter";
 import {TextCreator} from "./text-creator";
-import {TrashSchedule,TrashData,TrashTypeValue,EvweekValue,getLogger, ExcludeDate} from "../index"
+import {ScheduleValue,TrashData,TrashTypeValue,EvweekValue,getLogger, ExcludeDate, TrashSchedule} from "../index"
 import {LocaleText} from "./template_text/locale-text"
 const logger = getLogger();
 
 export interface GetTrashDataResult {
     status: string,
     response?: TrashData[],
+    checkedNextday?: boolean,
     msgId?: keyof LocaleText
 }
 
@@ -38,11 +39,12 @@ export class TrashScheduleService {
             }
 
             if(user_id) {
-                const scheduleData: TrashData[] = await this.dbAdapter.getTrashSchedule(user_id);
-                if (scheduleData && scheduleData.length > 0) {
+                const scheduleData: TrashSchedule = await this.dbAdapter.getTrashSchedule(user_id);
+                if (scheduleData && scheduleData.trashData.length > 0) {
                     return {
                         status: 'success',
-                        response: scheduleData
+                        response: scheduleData.trashData,
+                        checkedNextday: scheduleData.checkedNextday
                     };
                 }
             }
@@ -371,7 +373,7 @@ export class TrashScheduleService {
         const today_dt = this.calculateLocalTime(0);
         match_dates.forEach((recentTrashData)=>{
             let recently = new Date('9999/12/31');
-            recentTrashData.schedules.forEach((schedule: TrashSchedule)=>{
+            recentTrashData.schedules.forEach((schedule: ScheduleValue)=>{
                 const next_dt: Date = this.calculateNextDateBySchedule(today_dt,schedule.type,schedule.value,recentTrashData.excludes);
                 if(recently.getTime() > next_dt.getTime()) {
                     recently =  new Date(next_dt.getTime());

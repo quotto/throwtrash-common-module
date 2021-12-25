@@ -1,4 +1,4 @@
-import {getLogger,TrashData,TrashTypeValue } from "../index";
+import {getLogger,TrashData,TrashSchedule,TrashTypeValue } from "../index";
 const logger = getLogger();
 logger.setLevel_DEBUG();
 
@@ -13,7 +13,7 @@ class TestDBAdapter implements DBAdapter {
     getUserIDByAccessToken(access_token: string): Promise<string> {
         throw new Error("Method not implemented.");
     }
-    getTrashSchedule(user_id: string): Promise<TrashData[]> {
+    getTrashSchedule(user_id: string): Promise<TrashSchedule> {
         throw new Error("Method not implemented.");
     }
 }
@@ -746,11 +746,11 @@ describe('getTrashData', function () {
             }
             throw new Error("Method not implemented.");
         }
-        getTrashSchedule(user_id: string): Promise<TrashData[]> {
+        getTrashSchedule(user_id: string): Promise<TrashSchedule> {
             if(user_id === id_001 || user_id === access_token_003) {
-                return new Promise((resolve,reject)=>{resolve(testData.evweek)});
+                return new Promise((resolve,reject)=>{resolve({trashData: testData.evweek,checkedNextday: false})});
             } else if(user_id === id_002) {
-                return new Promise((resolve,reject)=>{resolve([])});
+                return new Promise((resolve,reject)=>{resolve({trashData: [], checkedNextday: true})});
             }
             throw new Error("Method not implemented.");
         }

@@ -4,7 +4,7 @@ exports.default = {
     ERROR_GENERAL: "Failed to get the information. Please contact skills developers.",
     ERROR_UNKNOWN: "Registration information can not be found. Please try again after performing the account link.",
     HELP_ACCOUNT: "Account link for registration of garbage disposal plans in this skill is required. From the account link for the card, which is displayed on the home screen of Alexa app, please set.",
-    HELP_DESCRIBE: "Specify the 'Today', 'Tomorrow', 'the day after tomorrow' or 'day of the week' You can see the trash's schedule. For example, please say 'What trash on Wednesday?' ",
+    HELP_DESCRIBE: "Specify the 'Today', 'Tomorrow', 'the day after tomorrow' or 'day of the week' You can see the trash's schedule. For example, please say 'What trash on Wednesday?' Also, if you invoke this skill with routine action in after noon,this skill will return tomorrow's schedule.",
     HELP_BYE: "Thank you,please use again",
     HELP_NEXT_PREVIOUS: "Please specify the dates you want to know the trash's schedule.",
     NOTICE_CONTINUE: "Please say type of day or trash you want to know.",
