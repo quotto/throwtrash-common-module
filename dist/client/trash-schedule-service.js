@@ -26,10 +26,11 @@ class TrashScheduleService {
             }
             if (user_id) {
                 const scheduleData = await this.dbAdapter.getTrashSchedule(user_id);
-                if (scheduleData && scheduleData.length > 0) {
+                if (scheduleData && scheduleData.trashData.length > 0) {
                     return {
                         status: 'success',
-                        response: scheduleData
+                        response: scheduleData.trashData,
+                        checkedNextday: scheduleData.checkedNextday
                     };
                 }
             }

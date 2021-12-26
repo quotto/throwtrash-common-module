@@ -8,7 +8,7 @@ jest.mock("request-promise", ()=>async(option: any)=>{
                 match: "資源ごみ",
                 score: 1.0
             }
-        } 
+        }
     }
     throw new Error("request-promise error");
 });
@@ -20,7 +20,7 @@ class TestDBAdapter implements DBAdapter {
     getUserIDByAccessToken(access_token: string): Promise<string> {
         throw new Error("Method not implemented.");
     }
-    getTrashSchedule(user_id: string): Promise<import("..").TrashData[]> {
+    getTrashSchedule(user_id: string): Promise<import("..").TrashSchedule> {
         throw new Error("Method not implemented.");
     }
 }

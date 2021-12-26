@@ -6,6 +6,7 @@ import { LocaleText } from "./template_text/locale-text";
 export interface GetTrashDataResult {
     status: string;
     response?: TrashData[];
+    checkedNextday?: boolean;
     msgId?: keyof LocaleText;
 }
 export declare class TrashScheduleService {

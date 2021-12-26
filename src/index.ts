@@ -36,7 +36,7 @@ export function isValidTrashType(trash: TrashData, maxlength: number): boolean {
     return trash.type != "other" || (isNotEmpty(trash.trash_val) && isValidTrashVal(trash.trash_val as string) && isNotOverLength(trash.trash_val as string, maxlength))
 }
 
-export function existSchedule(schedules: TrashSchedule[]): boolean {
+export function existSchedule(schedules: ScheduleValue[]): boolean {
     return schedules && schedules.length > 0 && schedules.every((element) => {
         return element.type != 'none';
     });
@@ -89,7 +89,7 @@ export interface TrashTypeValue {
     name: string
 }
 
-export interface TrashSchedule {
+export interface ScheduleValue {
     type: string,
     value: string | EvweekValue
 }
@@ -97,8 +97,13 @@ export interface TrashSchedule {
 export interface TrashData {
     type: string,
     trash_val?: string,
-    schedules: Array<TrashSchedule>,
+    schedules: Array<ScheduleValue>,
     excludes?: Array<ExcludeDate>
+}
+
+export interface TrashSchedule {
+    trashData: TrashData[],
+    checkedNextday: boolean
 }
 
 export interface ExcludeDate {
