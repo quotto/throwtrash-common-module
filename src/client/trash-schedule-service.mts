@@ -462,7 +462,10 @@ export class TrashScheduleService {
             const response = await fetch(url, {
                 method: 'POST',
                 body: JSON.stringify(request_body),
-                headers: {'Content-Type': 'application/json'}
+                headers: {
+                    'x-api-key': this.mecabApiConfig!.api_key,
+                    'Content-Type': 'application/json'
+                }
             });
             const response_body = await response.text();
             const compareResult = decode(Buffer.from(response_body, 'base64')) as CompareApiResult[];
@@ -500,7 +503,10 @@ export class TrashScheduleService {
             const response = await fetch(url, {
                 method: 'POST',
                 body: JSON.stringify(request_body),
-                headers: {'Content-Type': 'application/json'}
+                headers: {
+                    'x-api-key': this.mecabApiConfig!.api_key,
+                    'Content-Type': 'application/json'
+                }
             });
             if(response.status != 200) {
                 logger.error(`compareMultipleTrashText failed:${response.status}`);
