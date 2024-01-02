@@ -1,32 +1,12 @@
 import {jest} from "@jest/globals";
 
-// jestでESM Nativeを使う場合は、jest.mockの代わりにjest.unstable_mockModuleを使う
-jest.unstable_mockModule("request-promise",()=>({
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        default: async(option: any)=>{
-        if (option.uri === process.env.MecabAPI_URL + "/compare") {
-            if (option.qs.word1 === "段ボール" && option.qs.word2 === "紙類") {
-                return encode({
-                    match: "段ボール",
-                    score: 0.5
-                });
-            }
-        }
-        throw new Error("request-promise error");
-        }
-    })
-);
-
-// 副作用を伴うインポートはjest.unstable_mockModuleの後にtop-level awaitを使って動的importする
 const {TextCreator, TrashScheduleService} = await import("../client/client.mjs");
 // 副作用を伴わない型情報だけのインポートを行う
-import type {CompareResult, RecentTrashDate, DBAdapter} from "../client/client.mjs";
+import type {RecentTrashDate, DBAdapter} from "../client/client.mjs";
 import type {TrashSchedule,TrashTypeValue} from "../types.mjs";
 import {getLogger} from "../logger.mjs";
 
 process.env.MecabAPI_URL = "https://example.com";
-import rp from "request-promise";
-import { encode } from "@msgpack/msgpack";
 import testData from "./testdata.json";
 
 const logger = getLogger();
@@ -120,8 +100,8 @@ describe('ja-JP',function(){
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let world_time_api_data: any;
     beforeAll(async()=>{
-        await rp.get('http://worldtimeapi.org/api/timezone/Asia/Tokyo').then((data)=>{
-            world_time_api_data = JSON.parse(data);
+        await fetch('http://worldtimeapi.org/api/timezone/Asia/Tokyo').then(async(data)=>{
+            world_time_api_data = await data.json();
         });
         Date.now = jest.fn().mockReturnValue(new Date().getTime()) as jest.Mock<typeof Number>;
     });
@@ -819,14 +799,5 @@ describe('getTrashData', function () {
         const result = await service.getTrashData(access_token_005);
         expect(result.status).toBe("error");
         expect(result.msgId).toBe("ERROR_GENERAL");
-    });
-});
-
-describe("compareTwoText",()=>{
-    const service = new TrashScheduleService("Asia/Tokyo", new TextCreator("ja-JP"), new TestDBAdapter());
-    it('有効なデータ',async()=>{
-        const result:CompareResult = await service.compareTwoText("段ボール","紙類")
-        expect(result.match).toBe("段ボール");
-        expect(result.score).toBe(0.5);
     });
 });

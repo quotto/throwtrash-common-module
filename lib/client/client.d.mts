@@ -7,10 +7,6 @@ interface RecentTrashDate {
     list: Date[];
     recent: Date;
 }
-interface CompareResult {
-    score: number;
-    match: string;
-}
 export * from "./text-creator.mjs";
 export * from "./trash-schedule-service.mjs";
-export { CompareResult, RecentTrashDate, DBAdapter };
+export { RecentTrashDate, DBAdapter };

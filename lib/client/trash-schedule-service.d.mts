@@ -1,7 +1,15 @@
-import type { RecentTrashDate, CompareResult, LocaleText } from "./client.mjs";
+import type { RecentTrashDate, LocaleText } from "./client.mjs";
 import type { TrashData, TrashTypeValue, EvweekValue, ExcludeDate } from "../types.mjs";
 import { DBAdapter } from "./db-adapter.mjs";
 import { TextCreator } from "./text-creator.mjs";
+export type CompareApiRequest = {
+    target: string;
+    comparisons: string[];
+};
+export type CompareApiResult = {
+    score: number;
+    match: string;
+};
 export interface GetTrashDataResult {
     status: string;
     response?: TrashData[];
@@ -71,5 +79,21 @@ export declare class TrashScheduleService {
         target_day: number;
         body: Array<TrashTypeValue | undefined>;
     }[]>;
-    compareTwoText(text1: string, text2: string): Promise<CompareResult>;
+    /**
+     * このメソッドは2つのゴミの名前を比較し、類似度を返す
+     * 類似度は0.0～1.0の範囲で返され、1.0に近いほど類似している
+     * 比較のための計算処理は外部APIを利用する
+     *
+     * @param target 比較するゴミの名前1
+     * @param comparison 比較するゴミの名前2
+     * @returns
+     */
+    compareTwoText(target: string, comparison: string): Promise<CompareApiResult[]>;
+    /**
+     * 指定されたゴミの名前と複数のゴミの名前を比較し、各ゴミの類似度を返す
+     * @param target ゴミの名前
+     * @param comparisons 比較するゴミの名前の配列
+     * @returns 比較結果の配列
+     */
+    compareMultipleTrashText(target: string, comparisons: string[]): Promise<CompareApiResult[]>;
 }

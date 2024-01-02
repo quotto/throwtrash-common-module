@@ -1,12 +1,22 @@
 import moment from 'moment-timezone';
 import {decode} from '@msgpack/msgpack';
-import rp from 'request-promise';
-import type {RecentTrashDate,CompareResult,LocaleText} from "./client.mjs";
+import type {RecentTrashDate,LocaleText} from "./client.mjs";
 import type {TrashData,TrashTypeValue,EvweekValue,ExcludeDate,ScheduleValue,TrashSchedule} from "../types.mjs";
 import {DBAdapter} from "./db-adapter.mjs";
 import {TextCreator} from "./text-creator.mjs";
 import {getLogger} from "../logger.mjs";
 const logger = getLogger();
+
+export type CompareApiRequest = {
+    target: string,
+    comparisons: string[]
+}
+
+export type CompareApiResult = {
+    score: number,
+    match: string
+}
+
 
 export interface GetTrashDataResult {
     status: string,
@@ -19,10 +29,12 @@ export class TrashScheduleService {
     private dbAdapter: DBAdapter;
     private timezone: string;
     private textCreator: TextCreator;
-    constructor(_timezone:string, _text_creator: TextCreator, _dbAdapter: DBAdapter){
+    private mecabApiConfig?: {url: string, api_key: string};
+    constructor(_timezone:string, _text_creator: TextCreator, _dbAdapter: DBAdapter,_mecabApiConfig?: {url: string, api_key: string}){
         this.timezone = _timezone || 'utc';
         this.textCreator = _text_creator;
         this.dbAdapter = _dbAdapter;
+        this.mecabApiConfig = _mecabApiConfig;
     }
 
     /**
@@ -421,27 +433,95 @@ export class TrashScheduleService {
         return result_list;
     }
 
-    async compareTwoText(text1: string, text2: string): Promise<CompareResult> {
-        if(text1 && text2) {
-            const option = {
-                uri: process.env.MecabAPI_URL + '/compare',
-                qs: {
-                    word1: text1,
-                    word2: text2
-                },
-                encoding: null
-            };
-            logger.info('Compare option:'+JSON.stringify(option));
-            try {
-                const response = await rp(option)
-                const compareResult = await decode(response) as CompareResult;
-                return compareResult;
-            } catch (err: unknown) {
-                logger.error(err as string);
-                throw err;
-            }
+    /**
+     * このメソッドは2つのゴミの名前を比較し、類似度を返す
+     * 類似度は0.0～1.0の範囲で返され、1.0に近いほど類似している
+     * 比較のための計算処理は外部APIを利用する
+     * 
+     * @param target 比較するゴミの名前1
+     * @param comparison 比較するゴミの名前2
+     * @returns 
+     */
+    async compareTwoText(target: string, comparison: string): Promise<CompareApiResult[]> {
+        if(!this.validateMecabApiConfig()) {
+            logger.error('MecabApiConfig is invalid');
+            throw Error('MecabApiConfig is invalid');
         }
-        logger.error(`Compare invalid parameter:${text1},${text2}`);
-        return Promise.reject('err');
+        if(target === '' || comparison === '') {
+            logger.error(`Compare invalid parameter:${target},${comparison}`)
+            throw Error('target or comparison is empty');
+        }
+        
+        const url = this.mecabApiConfig!.url + '/two_text_compare';
+        const request_body: CompareApiRequest = {
+                target: target,
+                comparisons: [comparison]
+        }
+        logger.info('Compare option:'+JSON.stringify(request_body));
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                body: JSON.stringify(request_body),
+                headers: {'Content-Type': 'application/json'}
+            });
+            const response_body = await response.text();
+            const compareResult = decode(Buffer.from(response_body, 'base64')) as CompareApiResult[];
+            return compareResult;
+        } catch (err: unknown) {
+            logger.error(err as string);
+            throw err;
+        }
+    }
+
+    /**
+     * 指定されたゴミの名前と複数のゴミの名前を比較し、各ゴミの類似度を返す
+     * @param target ゴミの名前
+     * @param comparisons 比較するゴミの名前の配列
+     * @returns 比較結果の配列
+     */
+    async compareMultipleTrashText(target: string, comparisons: string[]): Promise<CompareApiResult[]> {
+        if(!this.validateMecabApiConfig()) {
+            logger.error('MecabApiConfig is invalid');
+            throw Error('MecabApiConfig is invalid');
+        }
+        if(target === '') {
+            throw Error('target is empty');
+        }
+        if(comparisons.length === 0) {
+            throw Error('comparisons is empty');
+        }
+        const url = this.mecabApiConfig!.url + '/two_text_compare';
+        const request_body: CompareApiRequest = {
+                target: target,
+                comparisons: comparisons
+        };
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                body: JSON.stringify(request_body),
+                headers: {'Content-Type': 'application/json'}
+            });
+            if(response.status != 200) {
+                logger.error(`compareMultipleTrashText failed:${response.status}`);
+                logger.error(response.body?.toString() || '');
+                return Promise.reject('compareMultipleTrashText failed');
+            }
+            const response_body = await response.text();
+
+            // base64でエンコードされているためデコードする
+            const decoded_body = Buffer.from(response_body, 'base64');
+            const compareResult = decode(decoded_body) as CompareApiResult[];
+            return compareResult;
+        } catch (err: unknown) {
+            logger.error(err as string);
+            return Promise.reject(err);
+        }
+    }
+
+    private validateMecabApiConfig(): boolean {
+        return typeof(this.mecabApiConfig) === 'object' 
+            && typeof(this.mecabApiConfig!.url) === 'string' && this.mecabApiConfig!.url.length > 0 
+            && typeof(this.mecabApiConfig!.api_key) === 'string' && this.mecabApiConfig!.api_key.length > 0;
     }
 }
