@@ -20,7 +20,11 @@ export declare class TrashScheduleService {
     private dbAdapter;
     private timezone;
     private textCreator;
-    constructor(_timezone: string, _text_creator: TextCreator, _dbAdapter: DBAdapter);
+    private mecabApiConfig?;
+    constructor(_timezone: string, _text_creator: TextCreator, _dbAdapter: DBAdapter, _mecabApiConfig?: {
+        url: string;
+        api_key: string;
+    });
     /**
      * access_tokenが一致するゴミ出し予定を取得する
      * @param access_token アクセストークン
@@ -96,4 +100,5 @@ export declare class TrashScheduleService {
      * @returns 比較結果の配列
      */
     compareMultipleTrashText(target: string, comparisons: string[]): Promise<CompareApiResult[]>;
+    private validateMecabApiConfig;
 }
