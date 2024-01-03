@@ -1,5 +1,5 @@
-import type { RecentTrashDate, LocaleText } from "./client.mjs";
-import type { TrashData, TrashTypeValue, EvweekValue, ExcludeDate } from "../types.mjs";
+import type { LocaleText } from "./client.mjs";
+import type { TrashData, TrashTypeValue, EvweekValue, ExcludeDate, ScheduleValue } from "../types.mjs";
 import { DBAdapter } from "./db-adapter.mjs";
 import { TextCreator } from "./text-creator.mjs";
 export type CompareApiRequest = {
@@ -10,12 +10,19 @@ export type CompareApiResult = {
     score: number;
     match: string;
 };
-export interface GetTrashDataResult {
+export type RecentTrashDate = {
+    key: string;
+    schedules: ScheduleValue[];
+    excludes: ExcludeDate[];
+    list: Date[];
+    recent: Date;
+};
+export type GetTrashDataResult = {
     status: string;
     response?: TrashData[];
     checkedNextday?: boolean;
     msgId?: keyof LocaleText;
-}
+};
 export declare class TrashScheduleService {
     private dbAdapter;
     private timezone;
