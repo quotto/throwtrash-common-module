@@ -20,7 +20,7 @@ class TestDBAdapter implements DBAdapter {
     }
 }
 
-describe('compareTwoText',()=>{
+describe("compareTwoText",()=>{
     const service = new TrashScheduleService(
         "Asia/Tokyo", new TextCreator("ja-JP"), new TestDBAdapter(),{url: "https://example.com", api_key: "test"});
     beforeEach(()=>{
@@ -50,71 +50,71 @@ describe('compareTwoText',()=>{
             }
         }
     });
-    it('正常データ',async()=>{
-        const result: CompareApiResult[] = await service.compareTwoText('資源ごみ','資源ごみ');
+    it("正常データ",async()=>{
+        const result: CompareApiResult[] = await service.compareTwoText("資源ごみ","資源ごみ");
         console.log(result[0].match)
         console.log(result[0].score)
         console.log(JSON.parse(JSON.stringify(result)));
         expect(result[0].match).toBe("資源ごみ");
         expect(result[0].score).toBe(1.0);
     });
-    it('targetがブランクの場合はエラー', async()=>{
+    it("targetがブランクの場合はエラー", async()=>{
         try {
-            await service.compareTwoText('','ビン');
+            await service.compareTwoText("","ビン");
             expect(true).toBe(false);
             throw new Error("エラーが発生しませんでした")
         }catch(err){
             expect((err as Error).message).toBe("target or comparison is empty");
         }
     });
-    it('comparisonがブランクの場合はエラー', async()=>{
+    it("comparisonがブランクの場合はエラー", async()=>{
         try {
-            await service.compareTwoText('ペットボトル','');
+            await service.compareTwoText("ペットボトル","");
             expect(true).toBe(false);
             throw new Error("エラーが発生しませんでした")
         }catch(err){
             expect((err as Error).message).toBe("target or comparison is empty");
         }
     });
-    it('API設定をしていない場合はエラー', async()=>{
+    it("API設定をしていない場合はエラー", async()=>{
         const service = new TrashScheduleService(
             "Asia/Tokyo", new TextCreator("ja-JP"), new TestDBAdapter());
         try {
-            await service.compareTwoText('ペットボトル','ビン');
+            await service.compareTwoText("ペットボトル","ビン");
             expect(true).toBe(false);
             throw new Error("エラーが発生しませんでした")
         }catch(err){
             expect((err as Error).message).toBe("MecabApiConfig is invalid");
         }
     });
-    it('API設定のURLがブランクの場合はエラー', async()=>{
+    it("API設定のURLがブランクの場合はエラー", async()=>{
         const service = new TrashScheduleService(
             "Asia/Tokyo", new TextCreator("ja-JP"), new TestDBAdapter(),{url: "", api_key: "test"});
         try {
-            await service.compareTwoText('ペットボトル','ビン');
+            await service.compareTwoText("ペットボトル","ビン");
             expect(true).toBe(false);
             throw new Error("エラーが発生しませんでした")
         }catch(err){
             expect((err as Error).message).toBe("MecabApiConfig is invalid");
         }
     });
-    it('API設定のAPIキーがブランクの場合はエラー', async()=>{
+    it("API設定のAPIキーがブランクの場合はエラー", async()=>{
         const service = new TrashScheduleService(
             "Asia/Tokyo", new TextCreator("ja-JP"), new TestDBAdapter(),{url: "https://example.com", api_key: ""});
         try {
-            await service.compareTwoText('ペットボトル','ビン');
+            await service.compareTwoText("ペットボトル","ビン");
             expect(true).toBe(false);
             throw new Error("エラーが発生しませんでした")
         }catch(err){
             expect((err as Error).message).toBe("MecabApiConfig is invalid");
         }
     });
-    it('APIエラー', async()=>{
+    it("APIエラー", async()=>{
         global.fetch = async (input: RequestInfo | URL, init?: RequestInit | undefined): Promise<Response> => { 
             throw new Error("api error");
         }
         try {
-            await service.compareTwoText('ペットボtる','ビン');
+            await service.compareTwoText("ペットボtる","ビン");
             expect(true).toBe(false);
             throw new Error("エラーが発生しませんでした")
         }catch(err){
@@ -123,11 +123,11 @@ describe('compareTwoText',()=>{
     });
 });
 
-describe('compareMultipleTrashText',()=>{
+describe("compareMultipleTrashText",()=>{
     const service = new TrashScheduleService(
         "Asia/Tokyo", new TextCreator("ja-JP"), new TestDBAdapter(),{url: "https://example.com", api_key: "test"}
     );
-    it('1件の比較対象',async()=>{
+    it("1件の比較対象",async()=>{
         global.fetch = async (input: RequestInfo | URL, init?: RequestInit | undefined): Promise<Response> => {
             return {
                 status: 200,
@@ -153,11 +153,11 @@ describe('compareMultipleTrashText',()=>{
                 clone: () => new Response()
             }
         }
-        const result: CompareApiResult[] = await service.compareMultipleTrashText('資源ごみ',['資源ごみ']);
+        const result: CompareApiResult[] = await service.compareMultipleTrashText("資源ごみ",["資源ごみ"]);
         expect(result[0].match).toBe("資源ごみ");
         expect(result[0].score).toBe(1.0);
     });
-    it('複数件の比較対象',async()=>{
+    it("複数件の比較対象",async()=>{
         global.fetch = async (input: RequestInfo | URL, init?: RequestInit | undefined): Promise<Response> => {
             return {
                 status: 200,
@@ -184,69 +184,69 @@ describe('compareMultipleTrashText',()=>{
             }
         }
 
-        const result: CompareApiResult[] = await service.compareMultipleTrashText('資源ごみ',['資源ごみ','ビン']);
+        const result: CompareApiResult[] = await service.compareMultipleTrashText("資源ごみ",["資源ごみ","ビン"]);
         expect(result[0].match).toBe("資源ごみ");
         expect(result[0].score).toBe(1.0);
         expect(result[1].match).toBe("ビン");
         expect(result[1].score).toBe(0.5);
     });
-    it('targetがブランクの場合はエラー', async()=>{
+    it("targetがブランクの場合はエラー", async()=>{
         try {
-            await service.compareMultipleTrashText('',['ビン']);
+            await service.compareMultipleTrashText("",["ビン"]);
             expect(true).toBe(false);
             throw new Error("エラーが発生しませんでした")
         }catch(err){
             expect((err as Error).message).toBe("target is empty");
         }
     });
-    it('comparisonがブランクの場合はエラー', async()=>{
+    it("comparisonがブランクの場合はエラー", async()=>{
         try {
-            await service.compareMultipleTrashText('ペットボトル',[]);
+            await service.compareMultipleTrashText("ペットボトル",[]);
             expect(true).toBe(false);
             throw new Error("エラーが発生しませんでした")
         }catch(err){
             expect((err as Error).message).toBe("comparisons is empty");
         }
     });
-    it('API設定をしていない場合はエラー', async()=>{
+    it("API設定をしていない場合はエラー", async()=>{
         const service = new TrashScheduleService(
             "Asia/Tokyo", new TextCreator("ja-JP"), new TestDBAdapter());
         try {
-            await service.compareMultipleTrashText('ペットボトル',['ビン']);
+            await service.compareMultipleTrashText("ペットボトル",["ビン"]);
             expect(true).toBe(false);
             throw new Error("エラーが発生しませんでした")
         }catch(err){
             expect((err as Error).message).toBe("MecabApiConfig is invalid");
         }
     });
-    it('API設定のURLがブランクの場合はエラー', async()=>{
+    it("API設定のURLがブランクの場合はエラー", async()=>{
         const service = new TrashScheduleService(
             "Asia/Tokyo", new TextCreator("ja-JP"), new TestDBAdapter(),{url: "", api_key: "test"});
         try {
-            await service.compareMultipleTrashText('ペットボトル',['ビン']);
+            await service.compareMultipleTrashText("ペットボトル",["ビン"]);
             expect(true).toBe(false);
             throw new Error("エラーが発生しませんでした")
         }catch(err){
             expect((err as Error).message).toBe("MecabApiConfig is invalid");
         }
     });
-    it('API設定のAPIキーがブランクの場合はエラー', async()=>{
+    it("API設定のAPIキーがブランクの場合はエラー", async()=>{
         const service = new TrashScheduleService(
             "Asia/Tokyo", new TextCreator("ja-JP"), new TestDBAdapter(),{url: "https://example.com", api_key: ""});
         try {
-            await service.compareMultipleTrashText('ペットボトル',['ビン']);
+            await service.compareMultipleTrashText("ペットボトル",["ビン"]);
             expect(true).toBe(false);
             throw new Error("エラーが発生しませんでした")
         }catch(err){
             expect((err as Error).message).toBe("MecabApiConfig is invalid");
         }
     });
-    it('APIエラー', async()=>{
+    it("APIエラー", async()=>{
         global.fetch = async (input: RequestInfo | URL, init?: RequestInit | undefined): Promise<Response> => { 
             throw new Error("api error");
         }
         try {
-            await service.compareMultipleTrashText('ペットボtる',['ビン']);
+            await service.compareMultipleTrashText("ペットボtる",["ビン"]);
             expect(true).toBe(false);
             throw new Error("エラーが発生しませんでした")
         }catch(err){

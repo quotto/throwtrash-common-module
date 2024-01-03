@@ -68,13 +68,13 @@ const Text_Map: LocaleTextMap = {
 
 
 const get_num_sufix = (number: number): string => {
-    let suffix = 'th';
+    let suffix = "th";
     if (number === 1) {
-        suffix = 'st';
+        suffix = "st";
     } else if (number === 2) {
-        suffix = 'nd';
+        suffix = "nd";
     } else if (number === 3) {
-        suffix = 'rd';
+        suffix = "rd";
     }
 
     return String(number) + suffix;
@@ -101,7 +101,7 @@ export class TextCreator {
         const trash_name_list: string[] = [];
         trash_items.forEach((item) => {
             trash_name_list.push(
-                item.type === 'other' ? item.name : this.commonText.trashname[item.type]
+                item.type === "other" ? item.name : this.commonText.trashname[item.type]
             );
         });
         const response_trashes = trash_name_list.join(this.localeText.SEPARATOR);
@@ -118,45 +118,45 @@ export class TextCreator {
             return this.localeText.ANSWER_NOTHING;
         } else {
             const body = this.createTrashMessageBody(trash_items);
-            return this.localeText.ANSWER_LAUNCH.replace('%s', body);
+            return this.localeText.ANSWER_LAUNCH.replace("%s", body);
         }
     }
 
     getPointdayResponse(target_day: string, trash_items: TrashTypeValue[]): string {
         if(trash_items.length === 0) {
-            return this.localeText.ANSWER_NOTHING_A_DAY.replace('%s', this.commonText.pointday[target_day]);
+            return this.localeText.ANSWER_NOTHING_A_DAY.replace("%s", this.commonText.pointday[target_day]);
         } else {
             const body = this.createTrashMessageBody(trash_items);
-            return this.localeText.ANSWER_A_DAY.replace('%s1', this.commonText.pointday[target_day]).replace('%s2', body);
+            return this.localeText.ANSWER_A_DAY.replace("%s1", this.commonText.pointday[target_day]).replace("%s2", body);
         }
     }
 
     getDayByTrashTypeMessage(slot_value: TrashTypeValue, target_trash: {key: string,recent: Date}[]): string {
         if (target_trash.length === 0) {
-            return this.localeText.ANSWER_NOTHING_TRASH.replace('%s', slot_value.name);
+            return this.localeText.ANSWER_NOTHING_TRASH.replace("%s", slot_value.name);
         }
-        if (slot_value.type === 'other') {
+        if (slot_value.type === "other") {
             const part_text: string[] = []
             target_trash.forEach((trash) => {
                 part_text.push(
-                    this.localeText.ANSWER_A_TRASH.replace('%s1', trash.key)
-                        .replace('%s2', this.localeText.ANSWER_DATE
+                    this.localeText.ANSWER_A_TRASH.replace("%s1", trash.key)
+                        .replace("%s2", this.localeText.ANSWER_DATE
                             .replace("%m", this.commonText.month ? this.commonText.month[trash.recent.getMonth()] : trash.recent.getMonth() + 1)
-                            .replace('%d', trash.recent.getDate().toString())
-                            .replace('%w', this.commonText.weekday[trash.recent.getDay()]
+                            .replace("%d", trash.recent.getDate().toString())
+                            .replace("%w", this.commonText.weekday[trash.recent.getDay()]
                             ))
                 );
             });
             const body = part_text.join(this.localeText.SEPARATOR);
-            return this.localeText.ANSWER_BY_TRASH.replace('%s', body);
+            return this.localeText.ANSWER_BY_TRASH.replace("%s", body);
         }
         else {
-            return this.localeText.ANSWER_BY_TRASH.replace('%s', this.localeText.ANSWER_A_TRASH
-                .replace('%s1', slot_value.name)
-                .replace('%s2', this.localeText.ANSWER_DATE
+            return this.localeText.ANSWER_BY_TRASH.replace("%s", this.localeText.ANSWER_A_TRASH
+                .replace("%s1", slot_value.name)
+                .replace("%s2", this.localeText.ANSWER_DATE
                     .replace("%m", this.commonText.month ? this.commonText.month[target_trash[0].recent.getMonth()] : target_trash[0].recent.getMonth() + 1)
-                    .replace('%d', target_trash[0].recent.getDate().toString())
-                    .replace('%w', this.commonText.weekday[target_trash[0].recent.getDay()])
+                    .replace("%d", target_trash[0].recent.getDate().toString())
+                    .replace("%w", this.commonText.weekday[target_trash[0].recent.getDay()])
                 ));
 
         }
@@ -167,11 +167,11 @@ export class TextCreator {
     }
 
     getReminderConfirm(week_type: string, time: string): string {
-        return this.localeText.REMINDER_CONFIRM.replace('%s1', week_type).replace('%s2', time);
+        return this.localeText.REMINDER_CONFIRM.replace("%s1", week_type).replace("%s2", time);
     }
 
     getReminderComplete(week_type: string, time: string): string {
-        return this.localeText.REMINDER_DEFINE.replace('%s1', week_type).replace('%s2', time);
+        return this.localeText.REMINDER_DEFINE.replace("%s1", week_type).replace("%s2", time);
     }
 
     getTrashName(trash_type: string): string {
@@ -188,28 +188,28 @@ export class TextCreator {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const trash_data: any = {};
             trash_data.type = trash.type;
-            trash_data.typeText = trash.type != 'other' ? this.getTrashName(trash.type) : trash.trash_val;
+            trash_data.typeText = trash.type != "other" ? this.getTrashName(trash.type) : trash.trash_val;
 
             trash_data.schedules = [];
             trash.schedules.forEach((schedule)=>{
-                if(schedule.type == 'weekday') {
+                if(schedule.type == "weekday") {
                     const scheduleValue: string = schedule.value as string;
-                    trash_data.schedules.push(`${this.commonText.schedule.weekday.replace('%s',this.commonText.weekday[scheduleValue])}`);
-                } else if(schedule.type == 'biweek') {
+                    trash_data.schedules.push(`${this.commonText.schedule.weekday.replace("%s",this.commonText.weekday[scheduleValue])}`);
+                } else if(schedule.type == "biweek") {
                     const scheduleValue: string = schedule.value as string;
                     const matches: RegExpMatchArray | null = scheduleValue.match(/(\d)-(\d)/);
                     if(matches) {
                         const weekday = matches[1];
-                        const turn: string = this.locale === 'en-US' ? get_num_sufix(Number(matches[2])) : matches[2];
-                        trash_data.schedules.push(this.commonText.schedule.biweek.replace('%s1',turn).replace('%s2',this.commonText.weekday[weekday]));
+                        const turn: string = this.locale === "en-US" ? get_num_sufix(Number(matches[2])) : matches[2];
+                        trash_data.schedules.push(this.commonText.schedule.biweek.replace("%s1",turn).replace("%s2",this.commonText.weekday[weekday]));
                     }
-                } else if(schedule.type == 'month') {
+                } else if(schedule.type == "month") {
                     const scheduleValue: string = schedule.value as string;
-                    const day = this.locale === 'en-US' ? get_num_sufix(Number(scheduleValue)) : scheduleValue;
-                    trash_data.schedules.push(`${this.commonText.schedule.month.replace('%s',day)}`);
-                } else if(schedule.type == 'evweek') {
+                    const day = this.locale === "en-US" ? get_num_sufix(Number(scheduleValue)) : scheduleValue;
+                    trash_data.schedules.push(`${this.commonText.schedule.month.replace("%s",day)}`);
+                } else if(schedule.type == "evweek") {
                     const scheduleValue: EvweekValue = schedule.value as EvweekValue;
-                    trash_data.schedules.push(`${this.commonText.schedule.evweek.replace('%s1',this.commonText.weekday[scheduleValue.weekday]).replace('%s2',scheduleValue.interval)}`);
+                    trash_data.schedules.push(`${this.commonText.schedule.evweek.replace("%s1",this.commonText.weekday[scheduleValue.weekday]).replace("%s2",scheduleValue.interval)}`);
                 }
             });
             return_data.push(trash_data);
@@ -222,7 +222,7 @@ export class TextCreator {
     }
 
     getRegisterdContentForCard(schedule_data: TrashDataText[]): string {
-        let card_text = '';
+        let card_text = "";
         schedule_data.forEach((data) => {
             card_text += `${data.typeText}: ${data.schedules.join(this.localeText.SEPARATOR)}\n`;
         });

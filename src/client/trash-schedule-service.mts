@@ -1,6 +1,6 @@
-import moment from 'moment-timezone';
-import {decode} from '@msgpack/msgpack';
-import type {RecentTrashDate,LocaleText} from "./client.mjs";
+import moment from "moment-timezone";
+import {decode} from "@msgpack/msgpack";
+import type {LocaleText} from "./client.mjs";
 import type {TrashData,TrashTypeValue,EvweekValue,ExcludeDate,ScheduleValue,TrashSchedule} from "../types.mjs";
 import {DBAdapter} from "./db-adapter.mjs";
 import {TextCreator} from "./text-creator.mjs";
@@ -17,8 +17,16 @@ export type CompareApiResult = {
     match: string
 }
 
+export type RecentTrashDate = {
+    key: string,
+    schedules: ScheduleValue[],
+    excludes: ExcludeDate[]
+    list: Date[],
+    recent: Date
+}
 
-export interface GetTrashDataResult {
+
+export type GetTrashDataResult = {
     status: string,
     response?: TrashData[],
     checkedNextday?: boolean,
@@ -31,7 +39,7 @@ export class TrashScheduleService {
     private textCreator: TextCreator;
     private mecabApiConfig?: {url: string, api_key: string};
     constructor(_timezone:string, _text_creator: TextCreator, _dbAdapter: DBAdapter,_mecabApiConfig?: {url: string, api_key: string}){
-        this.timezone = _timezone || 'utc';
+        this.timezone = _timezone || "utc";
         this.textCreator = _text_creator;
         this.dbAdapter = _dbAdapter;
         this.mecabApiConfig = _mecabApiConfig;
@@ -54,7 +62,7 @@ export class TrashScheduleService {
                 const scheduleData: TrashSchedule = await this.dbAdapter.getTrashSchedule(user_id);
                 if (scheduleData && scheduleData.trashData.length > 0) {
                     return {
-                        status: 'success',
+                        status: "success",
                         response: scheduleData.trashData,
                         checkedNextday: scheduleData.checkedNextday
                     };
@@ -62,13 +70,13 @@ export class TrashScheduleService {
             }
             logger.error(`User Not Found(AccessToken: ${access_token})`);
             return {
-                status: 'error',
+                status: "error",
                 msgId: "ERROR_ID_NOT_FOUND"
             };
         } catch(err: unknown) {
             logger.error(err as string);
             return {
-                    status:'error',
+                    status:"error",
                     msgId: "ERROR_GENERAL"
             };
         }
@@ -118,7 +126,7 @@ export class TrashScheduleService {
      * @returns ゴミ出し可能ならゴミの名称を,不可能ならundefinedを返す
      */
     async getEnableTrashData(trash: TrashData,dt:Date): Promise<TrashTypeValue | undefined> {
-        const trash_name: string = trash.type ==='other' && trash.trash_val ? trash.trash_val : this.textCreator.getTrashName(trash.type);
+        const trash_name: string = trash.type ==="other" && trash.trash_val ? trash.trash_val : this.textCreator.getTrashName(trash.type);
         const trash_data:TrashTypeValue = {
             type: trash.type,
             name: trash_name
@@ -128,10 +136,10 @@ export class TrashScheduleService {
             // 例外日に設定されているならゴミ出しは不可能
             // (excludesがundefinedの場合everyが失敗するため、someの否定で判定する)
             if(!trash.excludes?.some(exclude=>exclude.month === dt.getMonth()+1 && exclude.date === dt.getDate())) {
-                if(schedule.type === 'weekday') {
+                if(schedule.type === "weekday") {
                     // 毎週
                     return Number(schedule.value) === dt.getDay();
-                } else if(schedule.type === 'biweek') {
+                } else if(schedule.type === "biweek") {
                     // 第x○曜日
                     const matches: RegExpMatchArray | null = (schedule.value as string).match(/(\d)-(\d)/);
                     if(matches) {
@@ -148,10 +156,10 @@ export class TrashScheduleService {
 
                         return weekday === dt.getDay() && turn === nowturn;
                     }
-                } else if(schedule.type === 'month') {
+                } else if(schedule.type === "month") {
                     // 毎月何日
                     return dt.getDate() === Number(schedule.value);
-                } else if(schedule.type === 'evweek') {
+                } else if(schedule.type === "evweek") {
                     // 隔週
                     const schedule_value: EvweekValue = schedule.value as EvweekValue;
                     // インターバルの設定がない場合はデフォルト2（週）で算出する
@@ -204,7 +212,7 @@ export class TrashScheduleService {
             );
         });
         const result:Array<TrashTypeValue | undefined> = await Promise.all(promise_list);
-        logger.debug('CheckEnableTrashes result:'+JSON.stringify(result));
+        logger.debug("CheckEnableTrashes result:"+JSON.stringify(result));
         // 同名のゴミがあった場合に重複を排除する
         const keys: string[] = [];
 
@@ -228,7 +236,7 @@ export class TrashScheduleService {
      * @returns {Date} 条件に合致する直近の日にち
      */
     calculateNextDateBySchedule(today: Date, schedule_type: string, schedule_val: string | EvweekValue, excludes: ExcludeDate[]): Date {
-        if(schedule_type === 'weekday') {
+        if(schedule_type === "weekday") {
             const getRecentlyDate = (base_dt: Date): Date => {
                 const recently_dt = new Date(base_dt.getTime());
                 const diff_day: number = Number(schedule_val) - base_dt.getDay();
@@ -242,7 +250,7 @@ export class TrashScheduleService {
                 return recently_dt;
             }
             return getRecentlyDate(new Date(today.getTime()));
-        } else if (schedule_type === 'month') {
+        } else if (schedule_type === "month") {
             const getRecentlyDate = (base_dt: Date): Date => {
                 const recently_dt = new Date(base_dt.getTime());
                 // スケジュールと現在の日にちの差分を取る
@@ -259,7 +267,7 @@ export class TrashScheduleService {
                 return recently_dt;
             }
             return getRecentlyDate(new Date(today.getTime()));
-        } else if(schedule_type === 'biweek') {
+        } else if(schedule_type === "biweek") {
             // 設定値
             const matches: RegExpMatchArray | null = (schedule_val as string).match(/(\d)-(\d)/);
             if(matches) {
@@ -300,7 +308,7 @@ export class TrashScheduleService {
                 }
                 return getRecentlyDate(new Date(today.getTime()));
             }
-        } else if(schedule_type === 'evweek') {
+        } else if(schedule_type === "evweek") {
             const evweek_val: EvweekValue = schedule_val as EvweekValue;
             // インターバルが設定されていないデータが存在するためその場合は2に置き換える
             const interval = evweek_val.interval || 2;
@@ -362,11 +370,11 @@ export class TrashScheduleService {
     * @returns {object} target_typeで指定されたゴミの直近の予定日プロパティ。{key:ゴミの種類,schedules:登録されているごみ出し予定,list:登録スケジュールから算出した直近の予定日,recent: listの中で最も近い日}
     */
     getDayByTrashType(trashes: Array<TrashData>, target_type: string): RecentTrashDate[] {
-        logger.debug('getDayByTrashType'+JSON.stringify(trashes)+',type:'+target_type);
+        logger.debug("getDayByTrashType"+JSON.stringify(trashes)+",type:"+target_type);
         const match_dates: RecentTrashDate[] = [];
         trashes.forEach((trash)=>{
             if(trash.type === target_type) {
-                const key: string = trash.type === 'other' && trash.trash_val ? trash.trash_val : trash.type;
+                const key: string = trash.type === "other" && trash.trash_val ? trash.trash_val : trash.type;
 
                 // 配列にkeyが存在しなければ初期状態で追加
                 if(match_dates.filter((recentTrashData)=>{recentTrashData.key === key}).length === 0) {
@@ -384,7 +392,7 @@ export class TrashScheduleService {
 
         const today_dt = this.calculateLocalTime(0);
         match_dates.forEach((recentTrashData)=>{
-            let recently = new Date('9999/12/31');
+            let recently = new Date("9999/12/31");
             recentTrashData.schedules.forEach((schedule: ScheduleValue)=>{
                 const next_dt: Date = this.calculateNextDateBySchedule(today_dt,schedule.type,schedule.value,recentTrashData.excludes);
                 if(recently.getTime() > next_dt.getTime()) {
@@ -394,7 +402,7 @@ export class TrashScheduleService {
             });
             recentTrashData.recent = recently;
         });
-        logger.debug('GetDayFromTrashType result:');
+        logger.debug("GetDayFromTrashType result:");
         logger.debug(JSON.stringify(match_dates,null,2));
         return match_dates;
     }
@@ -444,31 +452,31 @@ export class TrashScheduleService {
      */
     async compareTwoText(target: string, comparison: string): Promise<CompareApiResult[]> {
         if(!this.validateMecabApiConfig()) {
-            logger.error('MecabApiConfig is invalid');
-            throw Error('MecabApiConfig is invalid');
+            logger.error("MecabApiConfig is invalid");
+            throw Error("MecabApiConfig is invalid");
         }
-        if(target === '' || comparison === '') {
+        if(target === "" || comparison === "") {
             logger.error(`Compare invalid parameter:${target},${comparison}`)
-            throw Error('target or comparison is empty');
+            throw Error("target or comparison is empty");
         }
         
-        const url = this.mecabApiConfig!.url + '/two_text_compare';
+        const url = this.mecabApiConfig!.url + "/two_text_compare";
         const request_body: CompareApiRequest = {
                 target: target,
                 comparisons: [comparison]
         }
-        logger.info('Compare option:'+JSON.stringify(request_body));
+        logger.info("Compare option:"+JSON.stringify(request_body));
         try {
             const response = await fetch(url, {
-                method: 'POST',
+                method: "POST",
                 body: JSON.stringify(request_body),
                 headers: {
-                    'x-api-key': this.mecabApiConfig!.api_key,
-                    'Content-Type': 'application/json'
+                    "x-api-key": this.mecabApiConfig!.api_key,
+                    "Content-Type": "application/json"
                 }
             });
             const response_body = await response.text();
-            const compareResult = decode(Buffer.from(response_body, 'base64')) as CompareApiResult[];
+            const compareResult = decode(Buffer.from(response_body, "base64")) as CompareApiResult[];
             return compareResult;
         } catch (err: unknown) {
             logger.error(err as string);
@@ -484,16 +492,16 @@ export class TrashScheduleService {
      */
     async compareMultipleTrashText(target: string, comparisons: string[]): Promise<CompareApiResult[]> {
         if(!this.validateMecabApiConfig()) {
-            logger.error('MecabApiConfig is invalid');
-            throw Error('MecabApiConfig is invalid');
+            logger.error("MecabApiConfig is invalid");
+            throw Error("MecabApiConfig is invalid");
         }
-        if(target === '') {
-            throw Error('target is empty');
+        if(target === "") {
+            throw Error("target is empty");
         }
         if(comparisons.length === 0) {
-            throw Error('comparisons is empty');
+            throw Error("comparisons is empty");
         }
-        const url = this.mecabApiConfig!.url + '/two_text_compare';
+        const url = this.mecabApiConfig!.url + "/two_text_compare";
         const request_body: CompareApiRequest = {
                 target: target,
                 comparisons: comparisons
@@ -501,22 +509,22 @@ export class TrashScheduleService {
 
         try {
             const response = await fetch(url, {
-                method: 'POST',
+                method: "POST",
                 body: JSON.stringify(request_body),
                 headers: {
-                    'x-api-key': this.mecabApiConfig!.api_key,
-                    'Content-Type': 'application/json'
+                    "x-api-key": this.mecabApiConfig!.api_key,
+                    "Content-Type": "application/json"
                 }
             });
             if(response.status != 200) {
                 logger.error(`compareMultipleTrashText failed:${response.status}`);
-                logger.error(response.body?.toString() || '');
-                return Promise.reject('compareMultipleTrashText failed');
+                logger.error(response.body?.toString() || "");
+                return Promise.reject("compareMultipleTrashText failed");
             }
             const response_body = await response.text();
 
             // base64でエンコードされているためデコードする
-            const decoded_body = Buffer.from(response_body, 'base64');
+            const decoded_body = Buffer.from(response_body, "base64");
             const compareResult = decode(decoded_body) as CompareApiResult[];
             return compareResult;
         } catch (err: unknown) {
@@ -526,8 +534,8 @@ export class TrashScheduleService {
     }
 
     private validateMecabApiConfig(): boolean {
-        return typeof(this.mecabApiConfig) === 'object' 
-            && typeof(this.mecabApiConfig!.url) === 'string' && this.mecabApiConfig!.url.length > 0 
-            && typeof(this.mecabApiConfig!.api_key) === 'string' && this.mecabApiConfig!.api_key.length > 0;
+        return typeof(this.mecabApiConfig) === "object" 
+            && typeof(this.mecabApiConfig!.url) === "string" && this.mecabApiConfig!.url.length > 0 
+            && typeof(this.mecabApiConfig!.api_key) === "string" && this.mecabApiConfig!.api_key.length > 0;
     }
 }

@@ -160,21 +160,21 @@ describe("input check",()=>{
         });
     })
 });
-describe('generateUUID',()=> {
-    it('separatorナシ', ()=>{
+describe("generateUUID",()=> {
+    it("separatorナシ", ()=>{
         expect(generateUUID().length).toBe(32);
     });
-    it('separatorあり', ()=>{
-        expect(generateUUID('-').length).toBe(36);
+    it("separatorあり", ()=>{
+        expect(generateUUID("-").length).toBe(36);
     });
 });
-describe('generateRandomCode',()=>{
-    it('parameter無し',()=>{
+describe("generateRandomCode",()=>{
+    it("parameter無し",()=>{
         const result = generateRandomCode();
         console.log(result)
         expect(result.length).toBe(10);
     });
-    it('parameterあり',()=>{
+    it("parameterあり",()=>{
         const result = generateRandomCode(8);
         console.log(result)
         expect(result.length).toBe(8);

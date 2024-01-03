@@ -36,14 +36,14 @@ export function isValidTrashType(trash: TrashData, maxlength: number): boolean {
 
 export function existSchedule(schedules: ScheduleValue[]): boolean {
     return schedules && schedules.length > 0 && schedules.every((element) => {
-        return element.type != 'none';
+        return element.type != "none";
     });
 }
 
 export function checkTrashes(trashes: TrashData[]): boolean {
     return trashes && (trashes.length > 0) && trashes.every((trash) => {
         return trash.schedules && trash.schedules.every((schedule) => {
-            if (schedule.type === 'month') {
+            if (schedule.type === "month") {
                 return isValidMonthValue(schedule.value as string);
             }
             return true;
@@ -51,8 +51,8 @@ export function checkTrashes(trashes: TrashData[]): boolean {
     });
 }
 
-export function generateUUID(separator = ''): string {
-    let uuid = '', i, random;
+export function generateUUID(separator = ""): string {
+    let uuid = "", i, random;
     for (i = 0; i < 32; i++) {
         random = Math.random() * 16 | 0;
 
@@ -65,9 +65,9 @@ export function generateUUID(separator = ''): string {
 }
 
 export function generateRandomCode(length = 10): string {
-    let code = '';
+    let code = "";
     for (let i = 0; i < length; i++) {
-        code += 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_'[Math.floor(Math.random() * 63)];
+        code += "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_"[Math.floor(Math.random() * 63)];
     }
     return code;
 }
