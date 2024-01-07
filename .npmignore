@@ -1,4 +1,4 @@
 .vscode/
 src/
-jest.config.js
+jest.config.mjs
 node/
