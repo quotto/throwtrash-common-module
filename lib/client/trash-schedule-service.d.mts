@@ -57,7 +57,7 @@ export declare class TrashScheduleService {
      * @param dt 指定日
      * @returns ゴミ出し可能ならゴミの名称を,不可能ならundefinedを返す
      */
-    getEnableTrashData(trash: TrashData, dt: Date): Promise<TrashTypeValue | undefined>;
+    getEnableTrashData(trash: TrashData, dt: Date): TrashTypeValue | undefined;
     /**
      * 全ゴミ出しデータの中から指定された日にちにゴミ捨て可能な一覧を返す
      * @param trashes 全ゴミ出しデータ
