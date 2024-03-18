@@ -125,7 +125,7 @@ export class TrashScheduleService {
      * @param dt 指定日
      * @returns ゴミ出し可能ならゴミの名称を,不可能ならundefinedを返す
      */
-    async getEnableTrashData(trash: TrashData,dt:Date): Promise<TrashTypeValue | undefined> {
+    getEnableTrashData(trash: TrashData,dt:Date): TrashTypeValue | undefined {
         const trash_name: string = trash.type ==="other" && trash.trash_val ? trash.trash_val : this.textCreator.getTrashName(trash.type);
         const trash_data:TrashTypeValue = {
             type: trash.type,
@@ -205,19 +205,18 @@ export class TrashScheduleService {
      */
     async checkEnableTrashes(trashes: Array<TrashData>, target_day: number): Promise<Array<TrashTypeValue>> {
         const dt = this.calculateLocalTime(target_day);
-        const promise_list: Promise<TrashTypeValue | undefined>[] = [];
+        const trash_type_value_list: (TrashTypeValue | undefined)[] = [];
         trashes.forEach((trash) => {
-            promise_list.push(
+            trash_type_value_list.push(
                 this.getEnableTrashData(trash,dt)
             );
         });
-        const result:Array<TrashTypeValue | undefined> = await Promise.all(promise_list);
-        logger.debug("CheckEnableTrashes result:"+JSON.stringify(result));
+        logger.debug("CheckEnableTrashes result:"+JSON.stringify(trash_type_value_list));
         // 同名のゴミがあった場合に重複を排除する
         const keys: string[] = [];
 
         // undefinedはfilter内で除外するためTrashTypeValue[]としてreturnする
-        return result.filter((value: TrashTypeValue | undefined) =>{
+        return trash_type_value_list.filter((value: TrashTypeValue | undefined) =>{
             // key配列に存在しない場合のみkeyを追加
             if(value && keys.indexOf(value.type + value.name) < 0) {
                 const key: string = value.type+value.name;
@@ -445,10 +444,10 @@ export class TrashScheduleService {
      * このメソッドは2つのゴミの名前を比較し、類似度を返す
      * 類似度は0.0～1.0の範囲で返され、1.0に近いほど類似している
      * 比較のための計算処理は外部APIを利用する
-     * 
+     *
      * @param target 比較するゴミの名前1
      * @param comparison 比較するゴミの名前2
-     * @returns 
+     * @returns
      */
     async compareTwoText(target: string, comparison: string): Promise<CompareApiResult[]> {
         if(!this.validateMecabApiConfig()) {
@@ -459,7 +458,7 @@ export class TrashScheduleService {
             logger.error(`Compare invalid parameter:${target},${comparison}`)
             throw Error("target or comparison is empty");
         }
-        
+
         const url = this.mecabApiConfig!.url + "/two_text_compare";
         const request_body: CompareApiRequest = {
                 target: target,
@@ -534,8 +533,8 @@ export class TrashScheduleService {
     }
 
     private validateMecabApiConfig(): boolean {
-        return typeof(this.mecabApiConfig) === "object" 
-            && typeof(this.mecabApiConfig!.url) === "string" && this.mecabApiConfig!.url.length > 0 
+        return typeof(this.mecabApiConfig) === "object"
+            && typeof(this.mecabApiConfig!.url) === "string" && this.mecabApiConfig!.url.length > 0
             && typeof(this.mecabApiConfig!.api_key) === "string" && this.mecabApiConfig!.api_key.length > 0;
     }
 }
