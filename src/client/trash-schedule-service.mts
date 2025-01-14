@@ -170,6 +170,8 @@ export class TrashScheduleService {
                         start_dt.setMinutes(0);
                         start_dt.setSeconds(0);
                         start_dt.setMilliseconds(0);
+                        // 登録された開始日が日曜日ではない場合があるため、直前の日曜日を求める
+                        start_dt.setDate(start_dt.getDate() - start_dt.getDay());
 
                         // 今週の日曜日を求める
                         const current_dt:Date = new Date(dt.toISOString());
@@ -317,6 +319,8 @@ export class TrashScheduleService {
             start_dt.setMinutes(0);
             start_dt.setSeconds(0);
             start_dt.setMilliseconds(0);
+            // 登録された開始日が日曜日ではない場合があるため、直前の日曜日を求める
+            start_dt.setDate(start_dt.getDate() - start_dt.getDay());
 
             const getRecentlyDate = (base_dt: Date): Date => {
                 const recently_dt = new Date(base_dt.getTime());
