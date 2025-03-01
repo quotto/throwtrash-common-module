@@ -41,7 +41,9 @@ export function existSchedule(schedules: ScheduleValue[]): boolean {
 }
 
 export function checkTrashes(trashes: TrashData[]): boolean {
-    return trashes && (trashes.length > 0) && trashes.every((trash) => {
+    if (!trashes) return false;
+    if (trashes.length === 0) return true;
+    return trashes.every((trash) => {
         return trash.schedules && trash.schedules.every((schedule) => {
             if (schedule.type === "month") {
                 return isValidMonthValue(schedule.value as string);

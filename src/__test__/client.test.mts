@@ -98,24 +98,46 @@ describe("calculateLocalTime",()=>{
 describe("ja-JP",function(){
     const service = new TrashScheduleService("Asia/Tokyo", new TextCreator("ja-JP"), new TestDBAdapter());
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let world_time_api_data: any;
+    let time_api_data: any;
     beforeAll(async()=>{
-        await fetch("http://worldtimeapi.org/api/timezone/Asia/Tokyo").then(async(data)=>{
-            world_time_api_data = await data.json();
+        await fetch("https://timeapi.io/api/Time/current/zone?timeZone=Asia/Tokyo").then(async(data)=>{
+            time_api_data = await data.json();
         });
         Date.now = jest.fn().mockReturnValue(new Date().getTime()) as jest.Mock<typeof Number>;
-    });
+    },10000);
     describe("calculateLocalTime",function(){
         it("今日の日付",function(){
-            const ans = new Date(world_time_api_data.unixtime * 1000 + (9*60*60*1000));
+            // timeapi.ioからのレスポンスを使用して正しいUTC時刻を計算
+            const dateTime = time_api_data.dateTime; // 形式: "2025-03-01T23:45:24.2221973"
+            const tokyoDate = new Date(dateTime);
+            const ans = new Date(Date.UTC(
+                tokyoDate.getFullYear(),
+                tokyoDate.getMonth(),
+                tokyoDate.getDate(),
+                tokyoDate.getHours(),
+                tokyoDate.getMinutes(),
+                tokyoDate.getSeconds()
+            ));
+
             const dt:Date = service.calculateLocalTime(0);
             expect(dt.getDate()).toBe(ans.getUTCDate());
             expect(dt.getDay()).toBe(ans.getUTCDay());
         });
 
         it("明日の日付",function(){
-            const ans = new Date(world_time_api_data.unixtime * 1000 + (9*60*60*1000));
-            ans.setSeconds(ans.getSeconds()+(24*60*60));
+            // timeapi.ioからのレスポンスを使用して翌日のUTC時刻を計算
+            const dateTime = time_api_data.dateTime;
+            const tokyoDate = new Date(dateTime);
+            const ans = new Date(Date.UTC(
+                tokyoDate.getFullYear(),
+                tokyoDate.getMonth(),
+                tokyoDate.getDate(),
+                tokyoDate.getHours(),
+                tokyoDate.getMinutes(),
+                tokyoDate.getSeconds()
+            ));
+            ans.setUTCDate(ans.getUTCDate() + 1); // 翌日に設定
+
             const dt = service.calculateLocalTime(1);
             expect(dt.getDate()).toBe(ans.getUTCDate());
             expect(dt.getDay()).toBe(ans.getUTCDay());

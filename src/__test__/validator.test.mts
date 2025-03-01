@@ -1,4 +1,6 @@
 import {checkTrashes, existSchedule, generateRandomCode, generateUUID, isNotEmpty, isNotLessMin, isNotOverMax, isNumber, isValidMonthValue, isValidTrashType, isValidTrashVal} from "../validator.mjs";
+import type { TrashData } from "../types.mjs";
+
 describe("input check",()=>{
     describe("isNotEmpty",()=>{
         it("string",()=>{
@@ -116,6 +118,10 @@ describe("input check",()=>{
             ];
             expect(checkTrashes(data)).toBeTruthy();
         });
+        it("empty array", ()=>{
+            const data: TrashData[] = [];
+            expect(checkTrashes(data)).toBeTruthy();
+        });
         it("invalid schedules empty", ()=>{
             const data = [
                 {type: "burn",schedules:[]},
@@ -179,4 +185,4 @@ describe("generateRandomCode",()=>{
         console.log(result)
         expect(result.length).toBe(8);
     });
-})
+});
