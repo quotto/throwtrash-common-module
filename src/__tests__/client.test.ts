@@ -1,10 +1,10 @@
 import {jest} from "@jest/globals";
 
-const {TextCreator, TrashScheduleService} = await import("../client/client.mjs");
+const {TextCreator, TrashScheduleService} = await import("../client/client.js");
 // 副作用を伴わない型情報だけのインポートを行う
-import type {RecentTrashDate, DBAdapter} from "../client/client.mjs";
-import type {TrashSchedule,TrashTypeValue} from "../types.mjs";
-import {getLogger} from "../logger.mjs";
+import type {RecentTrashDate, DBAdapter} from "../client/client.js";
+import type {TrashSchedule,TrashTypeValue} from "../types.js";
+import {getLogger} from "../logger.js";
 
 process.env.MecabAPI_URL = "https://example.com";
 import testData from "./testdata.json";

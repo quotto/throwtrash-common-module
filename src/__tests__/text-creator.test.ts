@@ -1,5 +1,5 @@
-import type { LocaleText } from "../client/client.mjs";
-import {TextCreator} from "../client/client.mjs"
+import type { LocaleText } from "../client/client.js";
+import {TextCreator} from "../client/client.js"
 
 describe("TextCreator",()=>{
     it("getMessage",()=>{

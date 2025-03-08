@@ -1,5 +1,5 @@
-import * as  common from "../index.mjs" ;
-import {loggerTest} from "./logger.sub.mjs";
+import * as  common from "../index.js" ;
+import {loggerTest} from "./logger.sub.js";
 const logger: common.Logger = common.getLogger();
 
 

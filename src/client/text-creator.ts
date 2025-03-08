@@ -1,7 +1,4 @@
-import type {TrashTypeValue,TrashData,EvweekValue} from "../types.mjs";
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import type {TrashTypeValue,TrashData,EvweekValue} from "../types.js";
 
 const enUSWordData = {
   "trashname": {

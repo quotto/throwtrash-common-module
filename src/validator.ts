@@ -1,4 +1,4 @@
-import type { TrashData, ScheduleValue } from "./types.mts";
+import type { TrashData, ScheduleValue } from "./types";
 
 export function isNotEmpty(value: string | number | undefined | null): boolean {
     return (typeof (value) != "undefined") && value != null && String(value).length > 0;

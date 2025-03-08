@@ -1,4 +1,4 @@
-import type { TrashData, ScheduleValue } from "./types.mts";
+import type { TrashData, ScheduleValue } from "./types";
 export declare function isNotEmpty(value: string | number | undefined | null): boolean;
 export declare function isNumber(value: string | number): boolean;
 export declare function isNotLessMin(value: number, min?: number): boolean;

@@ -3,10 +3,10 @@
   "version": "3.0.0",
   "description": "Common Module of ThrowTrash Productions",
   "main": "./lib/cjs/index.js",
-  "module": "./lib/esm/index.mjs",
+  "module": "./lib/esm/index.js",
   "exports": {
     ".": {
-      "import": "./lib/esm/index.mjs",
+      "import": "./lib/esm/index.js",
       "require": "./lib/cjs/index.js"
     }
   },
@@ -14,10 +14,9 @@
   "scripts": {
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "clean": "rm -rf lib",
-    "build": "npm run clean && npm run build:esm && npm run build:cjs && npm run fix-extensions",
+    "build": "npm run clean && npm run build:esm && npm run build:cjs",
     "build:esm": "tsc -p tsconfig.esm.json",
-    "build:cjs": "tsc -p tsconfig.cjs.json",
-    "fix-extensions": "find lib/esm -name \"*.js\" -type f -exec bash -c 'mv \"$1\" \"${1%.js}.mjs\"' - {} \\; && find lib/cjs -name \"*.mjs\" -type f -exec bash -c 'mv \"$1\" \"${1%.mjs}.js\"' - {} \\;"
+    "build:cjs": "tsc -p tsconfig.cjs.json"
   },
   "author": "",
   "license": "Apache-2.0",

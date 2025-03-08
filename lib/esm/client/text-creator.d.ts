@@ -1,4 +1,4 @@
-import type { TrashTypeValue, TrashData } from "../types.mjs";
+import type { TrashTypeValue, TrashData } from "../types.js";
 export type LocaleText = {
     ERROR_GENERAL: string;
     ERROR_ID_NOT_FOUND: string;

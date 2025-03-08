@@ -1,5 +1,5 @@
-import {checkTrashes, existSchedule, generateRandomCode, generateUUID, isNotEmpty, isNotLessMin, isNotOverMax, isNumber, isValidMonthValue, isValidTrashType, isValidTrashVal} from "../validator.mjs";
-import type { TrashData } from "../types.mjs";
+import {checkTrashes, existSchedule, generateRandomCode, generateUUID, isNotEmpty, isNotLessMin, isNotOverMax, isNumber, isValidMonthValue, isValidTrashType, isValidTrashVal} from "../validator.js";
+import type { TrashData } from "../types.js";
 
 describe("input check",()=>{
     describe("isNotEmpty",()=>{

@@ -3,9 +3,9 @@ import {encode} from "@msgpack/msgpack"
 
 
 // 副作用を伴わない型情報だけのインポートを行う
-import type { CompareApiResult, DBAdapter } from "../client/client.mjs";
+import type { CompareApiResult, DBAdapter } from "../client/client.js";
 // 副作用を伴うインポートはjest.unstable_mockModuleの後にtop-level awaitを使って動的importする
-const { TextCreator, TrashScheduleService } = await import("../client/client.mjs");
+const { TextCreator, TrashScheduleService } = await import("../client/client.js");
 
 process.env.MecabAPI_URL = "https://example.com";
 
@@ -15,7 +15,7 @@ class TestDBAdapter implements DBAdapter {
         throw new Error("Method not implemented.");
     }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    getTrashSchedule(_user_id: string): Promise<import("../index.mjs").TrashSchedule> {
+    getTrashSchedule(_user_id: string): Promise<import("../index.js").TrashSchedule> {
         throw new Error("Method not implemented.");
     }
 }
@@ -110,7 +110,7 @@ describe("compareTwoText",()=>{
         }
     });
     it("APIエラー", async()=>{
-        global.fetch = async (input: RequestInfo | URL, init?: RequestInit | undefined): Promise<Response> => { 
+        global.fetch = async (input: RequestInfo | URL, init?: RequestInit | undefined): Promise<Response> => {
             throw new Error("api error");
         }
         try {
@@ -242,7 +242,7 @@ describe("compareMultipleTrashText",()=>{
         }
     });
     it("APIエラー", async()=>{
-        global.fetch = async (input: RequestInfo | URL, init?: RequestInit | undefined): Promise<Response> => { 
+        global.fetch = async (input: RequestInfo | URL, init?: RequestInit | undefined): Promise<Response> => {
             throw new Error("api error");
         }
         try {

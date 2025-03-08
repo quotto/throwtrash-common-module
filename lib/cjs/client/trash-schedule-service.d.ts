@@ -1,7 +1,7 @@
-import type { LocaleText } from "./client.mjs";
-import type { TrashData, TrashTypeValue, EvweekValue, ExcludeDate, ScheduleValue } from "../types.mjs";
-import { DBAdapter } from "./db-adapter.mjs";
-import { TextCreator } from "./text-creator.mjs";
+import type { LocaleText } from "./client.js";
+import type { TrashData, TrashTypeValue, EvweekValue, ExcludeDate, ScheduleValue } from "../types.js";
+import { DBAdapter } from "./db-adapter.js";
+import { TextCreator } from "./text-creator.js";
 export type CompareApiRequest = {
     target: string;
     comparisons: string[];

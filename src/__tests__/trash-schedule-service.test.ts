@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { jest } from "@jest/globals";
-import { TrashData, TrashSchedule } from "../types.mjs";
-import { TrashScheduleService } from "../client/trash-schedule-service.mjs";
+import { TrashData, TrashSchedule } from "../types.js";
+import { TrashScheduleService } from "../client/trash-schedule-service.js";
 
-import { DBAdapter } from "../client/db-adapter.mjs";
-import { TextCreator } from "../client/text-creator.mjs";
+import { DBAdapter } from "../client/db-adapter.js";
+import { TextCreator } from "../client/text-creator.js";
 
 const dbAdapter: DBAdapter = {
   getUserIDByAccessToken: jest.fn(async (access_token: string) => {
@@ -32,7 +32,7 @@ const dbAdapter: DBAdapter = {
   })
 }
 
-jest.mock("../client/text-creator.mts");
+jest.mock("../client/text-creator.ts");
 const textCreator = new TextCreator("ja-JP");
 textCreator.getTrashName = jest.fn((type: string) => {
   return "もえるゴミ"

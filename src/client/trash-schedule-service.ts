@@ -1,10 +1,10 @@
 import moment from "moment-timezone";
 import {decode} from "@msgpack/msgpack";
-import type {LocaleText} from "./client.mjs";
-import type {TrashData,TrashTypeValue,EvweekValue,ExcludeDate,ScheduleValue,TrashSchedule} from "../types.mjs";
-import {DBAdapter} from "./db-adapter.mjs";
-import {TextCreator} from "./text-creator.mjs";
-import {getLogger} from "../logger.mjs";
+import type {LocaleText} from "./client.js";
+import type {TrashData,TrashTypeValue,EvweekValue,ExcludeDate,ScheduleValue,TrashSchedule} from "../types.js";
+import {DBAdapter} from "./db-adapter.js";
+import {TextCreator} from "./text-creator.js";
+import {getLogger} from "../logger.js";
 const logger = getLogger();
 
 export type CompareApiRequest = {
