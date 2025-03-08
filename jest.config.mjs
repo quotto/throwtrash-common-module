@@ -79,7 +79,7 @@ export default  {
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
   moduleNameMapper: {
-    '^(\\.{1,2}/.*)\\.mjs$': '$1',
+    '^(\\.{1,2}/.*)\\.m?js$': '$1'
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
@@ -173,15 +173,19 @@ export default  {
       "ts-jest",
       // JestでESModuleのテストを有効にするためのパラメータ
       {
-        "useESM": true
+        "useESM": true,
+        "tsconfig": "tsconfig.test.json"
       }
     ]
   },
 
+  // Required for importing JSON modules in ESM tests
+  extensionsToTreatAsEsm: ['.mts', '.ts'],
+
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
-  // transformIgnorePatterns: [
-  //   "\\\\node_modules\\\\"
-  // ],
+  transformIgnorePatterns: [
+    "node_modules/(?!(@msgpack|moment-timezone)/)"
+  ],
 
   // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them
   // unmockedModulePathPatterns: undefined,

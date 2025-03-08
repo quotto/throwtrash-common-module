@@ -2,15 +2,22 @@
   "name": "trash-common",
   "version": "3.0.0",
   "description": "Common Module of ThrowTrash Productions",
-  "main": "lib/index.js",
+  "main": "./lib/cjs/index.js",
+  "module": "./lib/esm/index.mjs",
   "exports": {
-    "import": "./lib/index.mjs",
-    "require": "./lib/index.js"
+    ".": {
+      "import": "./lib/esm/index.mjs",
+      "require": "./lib/cjs/index.js"
+    }
   },
   "type": "module",
   "scripts": {
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
-    "build": "tsc && cp -r src/client/template_text lib/client"
+    "clean": "rm -rf lib",
+    "build": "npm run clean && npm run build:esm && npm run build:cjs && npm run fix-extensions",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "fix-extensions": "find lib/esm -name \"*.js\" -type f -exec bash -c 'mv \"$1\" \"${1%.js}.mjs\"' - {} \\; && find lib/cjs -name \"*.mjs\" -type f -exec bash -c 'mv \"$1\" \"${1%.mjs}.js\"' - {} \\;"
   },
   "author": "",
   "license": "Apache-2.0",
