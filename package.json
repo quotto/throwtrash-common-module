@@ -10,7 +10,7 @@
       "require": "./lib/cjs/index.js"
     }
   },
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "clean": "rm -rf lib",
