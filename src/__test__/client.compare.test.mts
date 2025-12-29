@@ -46,7 +46,8 @@ describe("compareTwoText",()=>{
                 arrayBuffer: async () => new ArrayBuffer(0),
                 blob: async () => new Blob(),
                 formData: async () => new FormData(),
-                clone: () => new Response()
+                clone: () => new Response(),
+                bytes: async () => new Uint8Array(0)
             }
         }
     });
@@ -110,7 +111,7 @@ describe("compareTwoText",()=>{
         }
     });
     it("APIエラー", async()=>{
-        global.fetch = async (input: RequestInfo | URL, init?: RequestInit | undefined): Promise<Response> => { 
+        global.fetch = async (input: RequestInfo | URL, init?: RequestInit | undefined): Promise<Response> => {
             throw new Error("api error");
         }
         try {
@@ -150,7 +151,8 @@ describe("compareMultipleTrashText",()=>{
                 arrayBuffer: async () => new ArrayBuffer(0),
                 blob: async () => new Blob(),
                 formData: async () => new FormData(),
-                clone: () => new Response()
+                clone: () => new Response(),
+                bytes: async () => new Uint8Array(0)
             }
         }
         const result: CompareApiResult[] = await service.compareMultipleTrashText("資源ごみ",["資源ごみ"]);
@@ -180,7 +182,8 @@ describe("compareMultipleTrashText",()=>{
                 arrayBuffer: async () => new ArrayBuffer(0),
                 blob: async () => new Blob(),
                 formData: async () => new FormData(),
-                clone: () => new Response()
+                clone: () => new Response(),
+                bytes: async () => new Uint8Array(0)
             }
         }
 
@@ -242,7 +245,7 @@ describe("compareMultipleTrashText",()=>{
         }
     });
     it("APIエラー", async()=>{
-        global.fetch = async (input: RequestInfo | URL, init?: RequestInit | undefined): Promise<Response> => { 
+        global.fetch = async (input: RequestInfo | URL, init?: RequestInit | undefined): Promise<Response> => {
             throw new Error("api error");
         }
         try {

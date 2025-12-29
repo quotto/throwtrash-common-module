@@ -7,7 +7,7 @@ import type {TrashSchedule,TrashTypeValue} from "../types.mjs";
 import {getLogger} from "../logger.mjs";
 
 process.env.MecabAPI_URL = "https://example.com";
-import testData from "./testdata.json";
+import testData from "./testdata.json" with { type: "json" };
 
 const logger = getLogger();
 logger.setLevel_DEBUG();
@@ -100,10 +100,12 @@ describe("ja-JP",function(){
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let world_time_api_data: any;
     beforeAll(async()=>{
-        await fetch("http://worldtimeapi.org/api/timezone/Asia/Tokyo").then(async(data)=>{
-            world_time_api_data = await data.json();
-        });
-        Date.now = jest.fn().mockReturnValue(new Date().getTime()) as jest.Mock<typeof Number>;
+        // 固定の時刻を使用(外部API呼び出しを避けるため)
+        const fixedTime = new Date().getTime();
+        world_time_api_data = {
+            unixtime: Math.floor(fixedTime / 1000)
+        };
+        Date.now = jest.fn().mockReturnValue(fixedTime) as jest.Mock<typeof Number>;
     });
     describe("calculateLocalTime",function(){
         it("今日の日付",function(){
@@ -297,6 +299,13 @@ describe("ja-JP",function(){
                 expect(next_dt.getMonth()+1).toBe(12);
                 expect(next_dt.getDate()).toBe(7);
             })
+            it("2026/01/01が例外日の場合", ()=>{
+                const next_dt = service.calculateNextDateBySchedule(new Date("2025/12/30"), "weekday", "4", [{month: 1, date: 1}]);
+                expect(next_dt.getFullYear()).toBe(2026);
+                expect(next_dt.getMonth()+1).toBe(1);
+                expect(next_dt.getDate()).toBe(8);
+            });
+
         });
         describe("month", ()=>{
             it("month:当日",()=>{
