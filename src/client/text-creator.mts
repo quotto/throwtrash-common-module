@@ -1,9 +1,9 @@
 import type {TrashTypeValue,TrashData,EvweekValue} from "../types.mjs";
 
-import enUSWord from "./template_text/en-US.common.json" assert { type: "json" };
-import enUSText from "./template_text/en-US.text.json" assert { type: "json" };
-import jaJPWord from "./template_text/ja-JP.common.json" assert { type: "json" };
-import jaJPText from "./template_text/ja-JP.text.json" assert { type: "json" };
+import enUSWord from "./template_text/en-US.common.json" with { type: "json" };
+import enUSText from "./template_text/en-US.text.json" with { type: "json" };
+import jaJPWord from "./template_text/ja-JP.common.json" with { type: "json" };
+import jaJPText from "./template_text/ja-JP.text.json" with { type: "json" };
 export type LocaleText = {
     ERROR_GENERAL:string,
     ERROR_ID_NOT_FOUND:string,
